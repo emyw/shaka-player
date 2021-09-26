@@ -1,3 +1,4 @@
+/* eslint-disable */
 // generate something that can be used to help make a unique device netflix ESN number
 const generateDeviceId = (esnLength = 30) => {
   var text = "";
@@ -34,7 +35,7 @@ const caesarDecode = (source) => {
 
 // const proxyServerRoot = "https://proxy-api.enjoymoviesyourway.com";
 const proxyServerRoot = "http://localhost:4012";
-const sessionPath = `${proxyServerRoot}/session`;
+// const sessionPath = `${proxyServerRoot}/session`;
 const manifestPath = `${proxyServerRoot}/manifest`;
 const licensePath = `${proxyServerRoot}/license`;
 
@@ -159,7 +160,7 @@ const initPlayer = async () => {
     } else if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
       const emywMeta = buildEMYWMeta(state.currentProvider, request.sessionId);
       emywMeta.videoId = state.currentVideoId;
-      request.headers = { ...request.headers, ...buildEMYWHeader(emywMeta) };
+      request.headers = Object.assign(request.headers, buildEMYWHeader(emywMeta));
     }
   });
 }
@@ -183,13 +184,13 @@ const buildEMYWHeader = (emywMetaJson) => {
   return headers;
 }
 
-const updateAuthSession = async (provider) => {
-  const resAuth = await fetch(sessionPath, { method: 'POST', headers: buildEMYWHeader(buildEMYWMeta(state.currentProvider)) });
-  const bodyText = await resAuth.text();
-  state.providers[provider].tokens = JSON.parse(atob(caesarDecode(bodyText)));
-  localStorage.setItem('test-shaka-state', JSON.stringify(state));
-  console.log(state);
-};
+// const updateAuthSession = async (provider) => {
+//   const resAuth = await fetch(sessionPath, { method: 'POST', headers: buildEMYWHeader(buildEMYWMeta(state.currentProvider)) });
+//   const bodyText = await resAuth.text();
+//   state.providers[provider].tokens = JSON.parse(atob(caesarDecode(bodyText)));
+//   localStorage.setItem('test-shaka-state', JSON.stringify(state));
+//   console.log(state);
+// };
 
 const requestManifest = async (provider, videoId) => {
   const emywMeta = buildEMYWMeta(provider);
@@ -229,16 +230,18 @@ const handlePlay = async (provider, videoId) => {
     });
     if (provider === "NETFLIX") {
       player.configure({
-        advanced: {
-          'com.widevine.alpha': {
-            serverCertificate: Uint8Array.from(window.atob(NETFLIX_SERVER_CERT), c => c.charCodeAt(0))
-          }
+        drm: {
+          advanced: {
+            'com.widevine.alpha': {
+              serverCertificate: Uint8Array.from(window.atob(NETFLIX_SERVER_CERT), c => c.charCodeAt(0))
+            }
+          },
         },
-        streaming: {
-          // Netflix stalls a lot for some reason. Not sure if we should just enable this for all
-          // actually, the real issue was described here noticed on Chrome only: https://github.com/google/shaka-player/issues/438
-          stallEnabled: true 
-        }
+        // streaming: {
+        //   // Netflix video stalls/freezes a lot for some reason. Not sure if we should just enable this for all
+        //   // actually, the real issue was described here noticed on Chrome only: https://github.com/google/shaka-player/issues/438
+        //   stallEnabled: true 
+        // }
       });
     }
 
