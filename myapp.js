@@ -202,6 +202,7 @@ const buildEMYWHeader = (emywMetaJson) => {
 const requestManifest = async (provider, videoId, regenerateManifest) => {
   const emywMeta = buildEMYWMeta(provider);
   emywMeta.videoId = videoId;
+  emywMeta.includeFullManifestText = true;
   emywMeta.forceRegenerate = regenerateManifest;
   const resManifest = await fetch(manifestPath, { method: 'POST', headers: buildEMYWHeader(emywMeta) });
   const bodyText = await resManifest.text();
@@ -221,6 +222,7 @@ const handlePlay = async (provider, videoId, regenerateManifest) => {
     const enjoyManifestObject = await requestManifest(provider, videoId, regenerateManifest);
     if (enjoyManifestObject.failMessage) throw new Error(enjoyManifestObject.failMessage);
     const manifestUrl = `${manifestPath}/${enjoyManifestObject.manifestUrlKey}`;
+
     state.providers[provider].tokens = enjoyManifestObject.tokens; // update incase they were refreshed
     state.providers[provider].licenseUrl = enjoyManifestObject.licenseUrl;
     state.providers[provider].drmSession = enjoyManifestObject.drmSession;
@@ -246,20 +248,15 @@ const handlePlay = async (provider, videoId, regenerateManifest) => {
       // }
     });
 
-    // Originally I had the response sending the manifest text in the requestManfiest response object.
-    // But Roku needs an actual url that returns the manifest string, not an object with the manifest somewhere in it.
-    // So we now make a call to prepare the manifest and other stuff like the licenseUrl and vmapXml. The manifest will remain in cache
-    // for enough time for the client to then make another immediate request to pull down the manifest itself.
-
-    // These lines were for if we have the manifest text now as opposed to a url to load
-    // const mimeType = enjoyManifestObject.fixedManifest.indexOf('#EXTM3U') > -1 ? 'x-mpegurl' : 'dash+xml'
-    // await player.load(`data:application/${mimeType};base64,${btoa(enjoyManifestObject.fixedManifest)}`);
-
-    const manifestRes = await fetch(manifestUrl, { method: 'GET' });
-    const manifest = await manifestRes.text();
-    console.log(manifest);
-
-    await player.load(manifestUrl);
+    if (enjoyManifestObject.manifest) {
+      console.log('loading manifest after POST');
+      const mimeType = enjoyManifestObject.manifest.indexOf('#EXTM3U') > -1 ? 'x-mpegurl' : 'dash+xml'
+      await player.load(`data:application/${mimeType};base64,${window.btoa(enjoyManifestObject.manifest)}`);
+    } else {
+      // This option mainly here for Roku which requires a URL to get
+      console.log('loading manifest with GET');
+      await player.load(manifestUrl);
+    }
     // This runs if the asynchronous load is successful.
     console.log('The video has now been loaded!');
   } catch (e) {
