@@ -83,8 +83,8 @@ const initState = (initial) => {
       },
       HULU: {
         tokens: {
-          cookies: "guid=A30498112CBAC3C92A2C19AF1AD3F7AA; _h_csrf_id=2cbdbb763a17b4f3b38d6b417ca99712fe401e855c48ac8f2e65ed93641ca58c; _tcv=28a6b5388efe8f4fcbf2853ff20f90d3d3bd5deaf61d7090d85526415bd8dfc0; _hulu_uid=46639262; _hulu_e_id=3iGI8ZsdtvYXk39Jt06QDA; _hulu_bluekai_hashed_uid=925bd28da16179d7364d20b52738577a; _hulu_session=XGP8kLyD_0UgPiyw3aCL6K1isdc-Mv7tKu6TUJHTKDI1hdAQqA--rCrEn9vQimhD0ebx2xIKBHWSn3iQvswraqcHttKvoEoCQwFnmqqJ6WP%2FxvBcjOeb7Txyzrz6_GDKGW2qRuEh5iI41rRNM4GukDw28Pe%2F7C5HhKhYUUjL1UZzLH89C89i9KLRL3ocU8KESGcieQ1APs4Zm79zX97h3_DqYDMfnWk%2FOBaAV9Xni6oP%2F3WZU0P7rivfa4_GGwvLryAiGofUqwnT9XxPhGm%2FqEF2rqnFNwRrlWkP8iHf2I6it1AIe55OhD5U4mJzRal47fLUiC70mAz6qtPepfQKaznaXP92R9Es4ephEpL%2Ffo7seWwnp2eQjnYyuOR%2FHxgzGZl3KkY_HC6bv9o5o7PVwRdxlq3amIEYQUV0dhgSo6sdlmwNMPFWJOqoXfl5uLa7cWexty0zqvTiENiHht8_GbGovylQcBNx26zyfUiNOrsH%2FQmA4qHC97uXVud1rK9kUehrfpF5m5kcz%2F5HL6_eNbn1g0Q5rWHsecsg926PI0I4hLHfO77GYEnZydpShaBJiGR_5JDnwudisthAmZYvwCivyulo4AwyARiTWOgOkY28PpOVPXCvo3iQv_IQyoX62OhhV3Id3PhU%2F_HO%2FkAQdHVXz_Q5gXkIna4az0ifBmWRrBRT9uQ975NllvKQn2jQjk4UVqhgXxq8lBAIcWY1VFVPaKpMWx8pgIXpi2GGGsQGOwkZTxURfC0FK%2FD3cZp_5uWsmJ2lXzi3YmVPjxE7E_l4FLBOGkL8ueOtsynOSVS9KZ8adpZtRrbTKb%2FA36VbVYEEOILrzqXDPE5MYraQ2ml_NXo8_4gFTTjCo2g5JxodlLNjJ1TPZuWwQLOAj%2FFZqLO2z1TohzLdrGkWaLT4nTAByI7zoHXx0RTfR9hFbBVDBwv5SuxdJFB0QETX_7PBaLlBPw1DGfiQrQAv7sybEvzJg6k5O%2FQ-; _hulu_assignments=eyJ2MSI6W119; _p_edit_token=HzOSofd_fr9qoIgdj8koKg; _hulu_dt=22yqLkm9ZF5EpJ_CZE4gaiQRh7I-t7WEKTBBEhokEKwUPLU9xA--Awu04xrfMsVZFaqby58Ly9gFNd_H5d_WOdSE%2FnUwMpSQdZw6Sqb7fvPklsxfmwb6dau3Viiidh7Iw2n%2FcVohOSRaYpqic2DvlowLJ1wmj_m87KDt%2F0NjOLIdoeFeDUTUtqD9wbPRKVC6INx8OcENb3TQ1LdLpq12UWHsymTw5WS_tLhaGambY8rWvfR944OsPE%2FvY4rhBfLfREjUuMwgwLiY9R86O3lffxm9T_HxrZAyvBpRPmAfbp52ABFukAypd1wtUYn_%2FZifeVOExvG%2FOElI%2F3gAAOWUnVet6gHZQmhw2b1OCi0IB0k5Oc3oT1fqbXVhC9ZbmGgzEEoHUkeCoaXCiTa_IAo2E5JK58dl1OCTXwwGSBrej7QjVs7nAtePSjd0QcPioOyb7sfHBbFqEGhGFI%2FJzQgSf568DcTRJTHAgZsL_Cy004ZbGO7X%2FgHRQIYnerfXV4T9lKv%2FCORnysxYRVDpoa91BZHg3Jc02UsIxyC3Js0FAMs32i6%2FJM7mYndoO_aM0YEaUXrG9pa_CnEfHCSdocyqeZWdO5pwDxD4Hphe6t40mxxLgACepqDjjs3eqmCDtkWcTZTEEwIyPgUz4Awb_CEXdb1t947bdLa6vkNkuDm1iNMSmcX9u9fl7%2FJMhL3CIoopQdtF2vK4D4vx8yyjIasdNHYOhnrt4DvWGeXeMDzy59NHlMUwv7cbxM04MPTCXGw2i_3rbEM63PQ0R8IUrczy9eUQSuWTpCCourqdy4f1JsO4y6amoVt1RGyG5cNs0bBtIwEuyu2w5DaJWAq9jaz3EDnDDItPYAdLBxVcbrPlBqJomV6heNVu%2FFbXx8%2FmGK9ZMUumMRQVSjAvROEolEH4mBvBgAaiVaI-; metrics_tracker_session_manager=%7B%22session_id%22%3A%22A30498112CBAC3C92A2C19AF1AD3F7AA-54d3474a-30f0-449c-8a73-e69a9327ceee%22%2C%22creation_time%22%3A1632342926365%2C%22visit_count%22%3A1%2C%22session_seq%22%3A2%2C%22idle_time%22%3A1632342992810%7D; bm_mi=7C3319BB402837804553EC8198530CD5~rRQoi3qxtEp0GbhtoHRur6Pq1O5UPRGk0Ku7OLdpHmyH2MmyNEItfAQnOWNqiw+rJScVdFJy8JvUMsE+Bhyj426U0jMPcyKbPqDm0bqCIpkueHlgo9JIwrozUHJIyDln6IsPH6ero7LAC9wf4C3HCVvyXibturmnhxOoFzoz8LK9TfheytQ80QPEfPK6eepXCi8FJWQ+PO8NJZNLBXqA4XGJDiGrGTgtfRq3K/FAgzVaozRAS+E8XSjQ/b4hLMaIFRAV0700dby6xf8QivON8w==; _hulu_metrics_context_v1_=%7B%22cookie_session_guid%22%3A%22F43B7F7EE2BD6C72AF65ADED0EA96784%22%2C%22referrer_url%22%3A%22https%3A%2F%2Fauth.hulu.com%2F%22%7D; _session_referrer=auth.hulu.com%2F; sid=3ADEA52CA57AA30323921D7930C66A0E; beacon_seq=0; _ue=1632343004; _hsstat=existing-subscriber; _abanner=0; _rcsources=download%7C%7C%7C%7C%7C; bm_sv=C861C49F4BD151CDB94604DD152B2F7E~78lQk5X+4vKPt76fxqG5LGvOxeC5JccNXhMy+xRqn9aWpleLeoFlBHwbOnNrbZZsYUdSRIkL/t2aW8WyKdic0tJKMQ+sKZSMAywDwBPB3L3o7uI3mCzU58GzQUWz+Z8OTlCzAlrQ91dVDJQh9Sdrew==; _ga=GA1.2.757913165.1632343009; _gid=GA1.2.1759405579.1632343009; utag_main=v_id:017c0f385be0001dee35e0afa12f00073001f06b005f4$_sn:1$_ss:0$_st:1632344806959$ses_id:1632342924269%3Bexp-session$_pn:4%3Bexp-session$device_category:Tablet%3Bexp-session$_prevpage:%2Fdownload-app%3Bexp-1632346612482$hhid:0053a6298c752da7933b3a31135e2d7298dc02caac382ba34286ee7935794565%3Bexp-session$dc_visit:1$dc_event:1%3Bexp-session$dc_region:us-east-1%3Bexp-session; _gat_hulu1=1; _scid=7875db9f-f250-48de-bfd1-3c4b39e7f8ef; site_beacon_seq=4; _sctr=1|1632286800000; XSRF-TOKEN=5259a13b-2afe-429d-8aa9-80c2002faf4b; _hulu_pgid=117923843; _hulu_plid=1886389224; _csrf_id=acfe57720dd071bca9d8f0badce78e026c6cd432ae9b7bfe24d11387a80d6a67; ak_bmsc=189C1EC27CBD1527CBC17FFF3FD90CAB~000000000000000000000000000000~YAAQZJURYFlsVqJ6AQAA/wE6Dw1xPHGNBCZ8xdwJkR5l9XHsWQ7mMSaKySHigD/Bi2V9ftnAWQxNNOSWo+lTKSP0iqZtOwxKh+49RAEmKH1FEWBa9sdEs/IQeAuPvab1nocj3EGm3LumyBUVEC7b17cgJgF5kpY3Amd+okaLy0RCRW1H+dyLFvHn7nkZOufcb9oGfIYmDsi1BmkwfYl9aNVvb+fTPB2cbr3BO8xcu+R7s3wjxYMpCCZn7It9hNLoYBhIbnEnkXyv/MzKN4ibvPclwcUwhWErSqRHnqGQImygDw7hNcCcwVl8n5jy8CYMxNtajaxjs3zZ4vGi1lvv/2iAf3yP5iD/39/ECM9MSmAC9K26BIsbqY9zRhdMb9+CW8PV29jQG1uNbRMmcVTrh/FDBKbb/sp9mcdlvb3mWWO2N/7zXZse3y3bFEDMIn/CSI0bsgGkO4WBiETJEZtCekI=",
-          expiresAt: 1630383042789,
+          cookies: "_h_csrf_id=33cf019eb08785c78310bc262b609e000ee8dc85c39616c51a024b562565226e; _hulu_assignments=eyJ2MSI6W119; __utmc=155684772; __utmz=155684772.1632774102.1.1.utmcsr=enjoymoviesyourway.com|utmccn=(referral)|utmcmd=referral|utmcct=/; __utma=155684772.1938250556.1632774102.1632774102.1632774102.1; stc115168=tsa:0:20210927205142|env:1%7C20211028202142%7C20210927205142%7C1%7C1047149:20220927202142|uid:1632774102057.864315210.1289454.115168.1775495301.:20220927202142|srchist:1047149%3A1%3A20211028202142:20220927202142; _ga=GA1.2.1938250556.1632774102; _gcl_au=1.1.664325636.1632774102; _scid=a20add85-d54a-4b5c-9d30-d53a8313e942; JSESSIONID=node07uuumxetetvh1h7ygo7vtw0y48911040.node0; _sctr=1|1632726000000; _hulu_uid=46639262; _hulu_e_id=3iGI8ZsdtvYXk39Jt06QDA; _hulu_bluekai_hashed_uid=925bd28da16179d7364d20b52738577a; _hulu_dt=BzMImKi3d9P3Qyo8IAfi8rdSJJ4-zP9FIPsNLrZwhgK_Uc%2FARQ--sBDZWXo_g6210czW_NtcYxxsCZ2kY2ZAAEKzdvBQG1polXXQBtbeEZCjyUyXjZosZazGg410KMTLgG8KjMnk1JPlARemuqyvV8X8n_%2FZ48DU2cjr3Z9UEvHe9bymIt5OTpebjP2g%2FnmOqHXT8Q3OcKx4PXZDepLM6MU10tOwN952T1GE%2FclcLqic4tFeQ1hMfXC_U0nK2UWvVU6jkPDyLUu1_VlLJ3BnUGmf_nRkLHnXm6_PjTWAkbeFP_f%2FtLqg9v8chIsanCLFv8Au1F8GhWWLNjoglQlT4G_iV_UIpn3cqMTQO8f6_EUPql5ogTDb11FDSh7ZnuuSDa2Oo_RZ9CokLSelcrUUBga5syVIE5%2FnuEGqqYwCX8Iid1zpYt8OifHJYU2W%2FLQRSkTsfjly%2FY%2FN7M8U3pDR72WFUVx%2FyFOML%2FRkh3AvvJKt2pSq34vvDXpwDxlZ1xqAegX_TmctL0DEpaWqxYoOWzJyrknUeWDAgwT1dSPi3cafKr2arvstQgFcLLnUkTY2Wof7u3S5fURzD102GciYsyjMACGnDa11n%2Fv1kodSHvID72YBJR5wadjtivikhKa%2FiLSvhXa0c0JhD%2FTVu3SkXzbUf2eBlAW0bURzhtD6W2kerxX5OXsMsAMeRuQajNYy2HHr5OrCKhqfdX2POiHrac7TRDDBEz6X0yrPGXIdYSnT3k7rM75wqzMPpnQUcB8y38l5EF1HdjRVtbOcT4PDPIydQM%2F7g0jeSgu7WDggz_iR%2FoqzU7NmD%2FR6gY61HmuOKNDzJEm0gQa%2FFZumWx4njwWAEsKEJLXhh1aAmK1u9Cgk5vgbUP4nhsPY%2FH%2F_SrIz5oqAZhxNH3NCm0MnyNIsZI6ciSazgCw-; _gid=GA1.2.1896733256.1632869755; cp_enjoy__tcv=eyJuYW1lIjoiX3RjdiIsInZhbHVlIjoiYjlhM2UxMTRkNzBmZTRiZDk4NDZhYTkzNmY3NzFhMDRmNzU5NWMyNmE0YWYwZDgwNWEzNWIzZmM4Mjk4MzBmNSIsInBhdGgiOiIvIiwiZXhwaXJlcyI6IjIwMjQtMDktMjhUMjI6NTY6MjAuMDAwWiIsImRvbWFpbiI6Ii5odWx1LmNvbSJ9; _hulu_pid=46639262; _hulu_pname=Chad; _hulu_is_p_kids=0; _hulu_pprotect=1632869786994; guid=99DBB037FBAD4F85B2069CF1694B9BDD; AMCVS_0A19F13A598372E90A495D62%40AdobeOrg=1; _persisted_HEM=fe4dfe6180784b1e13e694d04c9eda4c32361f2a16d29068d6c8790eaac7d338; s_cc=true; _hulu_plid=1886389224; _hulu_hbc=1632871941391; _csrf_id=44ff25a02852759e4dbf6af21510e0001839bc50e6e1a4041a088954086f6e04; cp_enjoy__csrf_id=eyJuYW1lIjoiX2NzcmZfaWQiLCJ2YWx1ZSI6IjQ0ZmYyNWEwMjg1Mjc1OWU0ZGJmNmFmMjE1MTBlMDAwMTgzOWJjNTBlNmUxYTQwNDFhMDg4OTU0MDg2ZjZlMDQiLCJwYXRoIjoiLyIsImV4cGlyZXMiOiIyMDI0LTA5LTI3VDIzOjMyOjE3LjAwMFoiLCJkb21haW4iOiIuaHVsdS5jb20ifQ%3D%3D; cp_enjoy__hulu_plid=eyJuYW1lIjoiX2h1bHVfcGxpZCIsInZhbHVlIjoiMTg4NjM4OTIyNCIsInBhdGgiOiIvIiwiZXhwaXJlcyI6IjIwMjQtMDktMjdUMjM6MzI6MTcuMDAwWiIsImRvbWFpbiI6Ii5odWx1LmNvbSJ9; bm_mi=F7254971A0F3A601842C29683FD760B2~IsON1ctJLKMJENrBwpl1vLV2ENgmT3s7Jhj9TleUdbH0dEtD49QzxSLjH3dH+1DUDwdly35zK+rab9liXvF1xf954AWUaniRVC7Nf8lBHFROvH87XNizuT4DLuyN6VIHacEAHHAnuU4fAGO9q9gsgGmRUm9KclBOht4NGdq66QJC1rpK5KxXb7OUXOusEjF6yMBAMpx/n/N/rAvTMnqkbw==; cp_enjoy_bm_mi=eyJuYW1lIjoiYm1fbWkiLCJ2YWx1ZSI6IkY3MjU0OTcxQTBGM0E2MDE4NDJDMjk2ODNGRDc2MEIyfklzT04xY3RKTEtNSkVOckJ3cGwxdkxWMkVOZ21UM3M3SmhqOVRsZVVkYkgwZEV0RDQ5UXp4U0xqSDNkSCsxRFVEd2RseTM1eksrcmFiOWxpWHZGMXhmOTU0QVdVYW5pUlZDN05mOGxCSEZST3ZIODdYTml6dVQ0REx1eU42VklIYWNFQUhIQW51VTRmQUdPOXE5Z3NnR21SVW05S2NsQk9odDROR2RxNjZRSkMxcnBLNUt4WGI3T1VYT3VzRWpGNnlNQkFNcHgvbi9OL3JBdlRNbnFrYnc9PSIsImRvbWFpbiI6Ii5odWx1LmNvbSIsInBhdGgiOiIvIiwibWF4QWdlIjo3MTk5LCJodHRwT25seSI6dHJ1ZX0%3D; XSRF-TOKEN=bcc0b166-af6c-459e-bd13-5e235525ef4a; _hulu_session=iQGdfjT9fhz%2F_8Uv7Q3Pnmk6OH8-0BWeZWBpuM0momAw4K_pbQ--BTRw1WChnEefGEmLKazxOtwIHO%2FI3lGRt0FBLWa_12NMxzOtX0tVsehyl8HCnBh7ekiWTJR5sVobSstAr0CNyQPera86q8WkEs57XSvhYMR9m9gGpYExSfYWv3A3_xrzHyz%2F_pHCzdocT42fJRngkj6bXk4oxDR01BEq4JRaRyRtWQHeh%2FwLK7JlF80ceHUokLyvTX2a4a8CLKC2mIE3iSO2NSbdJ7hA3uRnP%2FH9joNQZbMK16oWxm2_BAh945gFDJ0BEcftCTWFgqHsyKIGyF8xajIoiN9pfxhfie_fihXOHcRhzoq_b82GAEJtDfX7myE3t1ZPTR0uDUtY23MhawzmsJWQ6lzptg73gyBdyV6gnG87HBHZ1e0GwIui_NEmgnN2LsupG8PqAKULLtIhJQt2CUcEnXyVqJy8FIve%2FbbdZ2Xa5dRrrA9DO5iCAC%2FjSMqzH%2F%2Fjv3TKR6On4RruDri9L7J%2Fo%2FQuCVLWffq7DZdq5Ga5uiLQivDpNBR0n1mG0qMcTQqD05_VYNnOtU%2FggwYXBBVgA0rI7xlu0RkF1dJslkYgXuX2htTqyGuwgY8MIck6hoR8qHs9n4cPXA6x4wS31XJ%2FMI0vxv03A0YWzQsDcI5DfjHH8uZVvk5Ks4H7mbqCvXXIPC7AfIXy1CjdNHkR8TFpKCo7vGbUycngLAlbONs3fjF%2F1VHn_bNfNxgzSViw4KW%2F22_yVPLpSMjyxi280RzqKop1Dw7lQAVKBuXF9oqbyw__IYtgywleWIarU9yMAUMCFIQ9vF2s%2FZkTTseu6_NJIp5W1wbh4CLp6uoaZYJvdF5pfxhvfMta8cwOHxdzFb7Suujrc_4SnU_YgjTtl77v7aBmBuOezu%2F%2FZJuqkBIUf7ZpwxWewyneoAccILSbMOK9bLYR5j499yZWZZBCz4sq9MAGy4kHc6k0hyw-; _hulu_pgid=394747907; cp_enjoy__hulu_pgid=eyJuYW1lIjoiX2h1bHVfcGdpZCIsInZhbHVlIjoiMzk0NzQ3OTA3IiwicGF0aCI6Ii8iLCJkb21haW4iOiIuaHVsdS5jb20iLCJleHBpcmVzIjoiMjAyNC0wOS0yOFQxMTozOTozMS4wMDBaIiwibWF4QWdlIjo5NDYwODAwMCwic2VjdXJlIjp0cnVlfQ%3D%3D; cp_enjoy__hulu_assignments=eyJuYW1lIjoiX2h1bHVfYXNzaWdubWVudHMiLCJ2YWx1ZSI6ImV5SjJNU0k2VzExOSIsInBhdGgiOiIvIiwiZG9tYWluIjoiLmh1bHUuY29tIiwiZXhwaXJlcyI6IjIwMjQtMDktMjhUMTE6Mzk6MzEuMDAwWiIsIm1heEFnZSI6OTQ2MDgwMDAsInNlY3VyZSI6dHJ1ZX0%3D; cp_enjoy__hulu_session=eyJuYW1lIjoiX2h1bHVfc2Vzc2lvbiIsInZhbHVlIjoiaVFHZGZqVDlmaHovXzhVdjdRM1BubWs2T0g4LTBCV2VaV0JwdU0wbW9tQXc0S19wYlEtLUJUUncxV0NobkVlZkdFbUxLYXp4T3R3SUhPL0kzbEdSdDBGQkxXYV8xMk5NeHpPdFgwdFZzZWh5bDhIQ25CaDdla2lXVEpSNXNWb2JTc3RBcjBDTnlRUGVyYTg2cThXa0VzNTdYU3ZoWU1SOW05Z0dwWUV4U2ZZV3YzQTNfeHJ6SHl6L19wSEN6ZG9jVDQyZkpSbmdrajZiWGs0b3hEUjAxQkVxNEpSYVJ5UnRXUUhlaC93TEs3SmxGODBjZUhVb2tMeXZUWDJhNGE4Q0xLQzJtSUUzaVNPMk5TYmRKN2hBM3VSblAvSDlqb05RWmJNSzE2b1d4bTJfQkFoOTQ1Z0ZESjBCRWNmdENUV0ZncUhzeUtJR3lGOHhhaklvaU45cGZ4aGZpZV9maWhYT0hjUmh6b3FfYjgyR0FFSnREZlg3bXlFM3QxWlBUUjB1RFV0WTIzTWhhd3ptc0pXUTZsenB0ZzczZ3lCZHlWNmduRzg3SEJIWjFlMEd3SXVpX05FbWduTjJMc3VwRzhQcUFLVUxMdEloSlF0MkNVY0VuWHlWcUp5OEZJdmUvYmJkWjJYYTVkUnJyQTlETzVpQ0FDL2pTTXF6SC8vanYzVEtSNk9uNFJydURyaTlMN0ovby9RdUNWTFdmZnE3RFpkcTVHYTV1aUxRaXZEcE5CUjBuMW1HMHFNY1RRcUQwNV9WWU5uT3RVL2dnd1lYQkJWZ0Ewckk3eGx1MFJrRjFkSnNsa1lnWHVYMmh0VHF5R3V3Z1k4TUljazZob1I4cUhzOW40Y1BYQTZ4NHdTMzFYSi9NSTB2eHYwM0EwWVd6UXNEY0k1RGZqSEg4dVpWdms1S3M0SDdtYnFDdlhYSVBDN0FmSVh5MUNqZE5Ia1I4VEZwS0NvN3ZHYlV5Y25nTEFsYk9OczNmakYvMVZIbl9iTmZOeGd6U1ZpdzRLVy8yMl95VlBMcFNNanl4aTI4MFJ6cUtvcDFEdzdsUUFWS0J1WEY5b3FieXdfX0lZdGd5d2xlV0lhclU5eU1BVU1DRklROXZGMnMvWmtUVHNldTZfTkpJcDVXMXdiaDRDTHA2dW9hWllKdmRGNXBmeGh2Zk10YThjd09IeGR6RmI3U3V1anJjXzRTblVfWWdqVHRsNzd2N2FCbUJ1T2V6dS8vWkp1cWtCSVVmN1pwd3hXZXd5bmVvQWNjSUxTYk1PSzliTFlSNWo0OTl5WldaWkJDejRzcTlNQUd5NGtIYzZrMGh5dy0iLCJwYXRoIjoiLyIsImRvbWFpbiI6Ii5odWx1LmNvbSIsImV4cGlyZXMiOiIyMDIxLTEwLTI5VDExOjM5OjMxLjAwMFoiLCJtYXhBZ2UiOjI1OTIwMDAsInNlY3VyZSI6dHJ1ZSwiaHR0cE9ubHkiOnRydWV9; _hulu_metrics_context_v1_=%7B%22cookie_session_guid%22%3A%2205c5ae1cb70342631830545343062de3%22%2C%22referrer_url%22%3A%22%22%2C%22curr_page_uri%22%3A%22urn%3Ahulu%3Ahub%3Ahome%22%2C%22primary_ref_page_uri%22%3Anull%2C%22secondary_ref_page_uri%22%3Anull%2C%22curr_page_type%22%3A%22home%22%2C%22primary_ref_page_type%22%3Anull%2C%22secondary_ref_page_type%22%3Anull%7D; ak_bmsc=B2EC11A805CC000DE0E961B684B78954~000000000000000000000000000000~YAAQZJURYAWi3KJ6AQAA+ktaMQ2406uOo0E6LAe2AHEYNvOgZBa6TQv2UGWgojgc3fDQB/O/e5ah5obISLpizhl3liP6cJMSzNQQUvYXeOINxnd0Nzpa1ibS4ljzqdsBEgdWFgzgMA6I0ylcJx2EXuiAhLWpGeI2XglZ0NlmzzUGPUnNzCroC8yMToFQlL/bUn+Hf1Q4KUm5BbC/v5VK9BYbSY8fBT8YrfKrhvIWlc116kt+HdVz7d2yYRkUgh1Hg0rMYke5gEqnjCHehRQ2vVVbgGnEvWzuq1CtoQjzRkLxA0On0lGo7ayxEMv89DUTCQb8cGIQ5ad3oSkR8tPzgM0qwQEeP7DwuwjbFO9DEKabWh7P1bGtLhxfpw/zS2KSjtSgHBQGz3Lvw6GZ8dY0/uYa9Ig360PvITJNN6nH85lpo/Y6Rs//glu4D2Qstmsd4PJIgUb+5Z3h1+qUXnhGJC+Eyz6dxXFsih9wn39N/pM4x1czRSt/sSf0hkh5qg==; cp_enjoy_ak_bmsc=eyJuYW1lIjoiYWtfYm1zYyIsInZhbHVlIjoiQjJFQzExQTgwNUNDMDAwREUwRTk2MUI2ODRCNzg5NTR%2BMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwfllBQVFaSlVSWUFXaTNLSjZBUUFBK2t0YU1RMjQwNnVPbzBFNkxBZTJBSEVZTnZPZ1pCYTZUUXYyVUdXZ29qZ2MzZkRRQi9PL2U1YWg1b2JJU0xwaXpobDNsaVA2Y0pNU3pOUVFVdllYZU9JTnhuZDBOenBhMWliUzRsanpxZHNCRWdkV0ZnemdNQTZJMHlsY0p4MkVYdWlBaExXcEdlSTJYZ2xaME5sbXp6VUdQVW5OekNyb0M4eU1Ub0ZRbEwvYlVuK0hmMVE0S1VtNUJiQy92NVZLOUJZYlNZOGZCVDhZcmZLcmh2SVdsYzExNmt0K0hkVno3ZDJ5WVJrVWdoMUhnMHJNWWtlNWdFcW5qQ0hlaFJRMnZWVmJnR25Fdld6dXExQ3RvUWp6UmtMeEEwT24wbEdvN2F5eEVNdjg5RFVUQ1FiOGNHSVE1YWQzb1NrUjh0UHpnTTBxd1FFZVA3RHd1d2piRk85REVLYWJXaDdQMWJHdExoeGZwdy96UzJLU2p0U2dIQlFHejNMdnc2R1o4ZFkwL3VZYTlJZzM2MFB2SVRKTk42bkg4NWxwby9ZNlJzLy9nbHU0RDJRc3Rtc2Q0UEpJZ1ViKzVaM2gxK3FVWG5oR0pDK0V5ejZkeFhGc2loOXduMzlOL3BNNHgxY3pSU3Qvc1NmMGhraDVxZz09IiwiZG9tYWluIjoiLmh1bHUuY29tIiwicGF0aCI6Ii8iLCJleHBpcmVzIjoiMjAyMS0wOS0yOVQxMzozOToyOC4wMDBaIiwibWF4QWdlIjo3MTk1LCJodHRwT25seSI6dHJ1ZX0%3D; _gat_hulu1=1; utag_main=v_id:017c28eb9b2300526354f7d719e803072005606a01888$_sn:3$_ss:1$_st:1632917380188$dc_visit:1$ses_id:1632915580188%3Bexp-session$_pn:1%3Bexp-session$_prevpage:%2Fhub%2Fhome%3Bexp-1632919180857$hhid:0053a6298c752da7933b3a31135e2d7298dc02caac382ba34286ee7935794565%3Bexp-session$hpid:0053a6298c752da7933b3a31135e2d7298dc02caac382ba34286ee7935794565%3Bexp-session$k_sync_ran:1%3Bexp-session$krux_sync_session:1632915580188%3Bexp-session$g_sync_ran:1%3Bexp-session$dc_event:1%3Bexp-session$dc_region:us-east-1%3Bexp-session; _uetsid=4f3db26020af11ec8390e3856ae44788; _uetvid=8390ec00579411eba256b74b2482094e; AMCV_0A19F13A598372E90A495D62%40AdobeOrg=-408604571%7CMCIDTS%7C18899%7CMCMID%7C57935084880191295912473131446238217316%7CMCAAMLH-1633520386%7C7%7CMCAAMB-1633520386%7CRKhpRz8krg2tLO6pguXWp5olkAcUniQYPHaMWWgdJ3xzPWQmdj0y%7CMCCIDH%7C-724531244%7CMCOPTOUT-1632922786s%7CNONE%7CMCAID%7C3031E81E4D93F3C0-60001764D2175998%7CvVersion%7C4.6.0; bm_sv=D9D2B8956B01F8488F5E7BE47D6994C2~78lQk5X+4vKPt76fxqG5LPQJpVMxGOvw04hhhRdCzLJigHirlvJmMK3IoM/SOeGyE+TZXqOxaZgzQR51syC1GgW6rQzEyYWDZ1zy0srQT61zZb6SiE8u1i7MLrMofUWmhiEKyIgotCiRejCkINVL4g==; cp_enjoy_bm_sv=eyJuYW1lIjoiYm1fc3YiLCJ2YWx1ZSI6IkQ5RDJCODk1NkIwMUY4NDg4RjVFN0JFNDdENjk5NEMyfjc4bFFrNVgrNHZLUHQ3NmZ4cUc1TFBRSnBWTXhHT3Z3MDRoaGhSZEN6TEppZ0hpcmx2Sm1NSzNJb00vU09lR3lFK1RaWHFPeGFaZ3pRUjUxc3lDMUdnVzZyUXpFeVlXRFoxenkwc3JRVDYxelpiNlNpRTh1MWk3TUxyTW9mVVdtaGlFS3lJZ290Q2lSZWpDa0lOVkw0Zz09IiwiZG9tYWluIjoiLmh1bHUuY29tIiwicGF0aCI6Ii8iLCJtYXhBZ2UiOjcxNTUsImh0dHBPbmx5Ijp0cnVlfQ%3D%3D; metrics_tracker_session_manager=%7B%22session_id%22%3A%2299DBB037FBAD4F85B2069CF1694B9BDD-61b881e0-c49a-4c03-9aa7-ba34883a468b%22%2C%22creation_time%22%3A1632915576563%2C%22visit_count%22%3A1%2C%22session_seq%22%3A23%2C%22idle_time%22%3A1632915622427%7D",
+          expiresAt: 1632872993472,
         }
       },
       AMAZON: {
@@ -108,7 +108,7 @@ const initState = (initial) => {
 
 const EMYW_PROXY_API_KEY = "e1d060d6-fa29-11eb-9a03-0242ac130003";
 
-const buildEMYWMeta = (provider, drmSessionId) => {
+const buildEMYWMeta = (provider) => {
   if (!state.providers[provider]) state.providers[provider] = initState(true).providers[provider];
   const metaData = {
     apiKey: EMYW_PROXY_API_KEY,
@@ -116,7 +116,7 @@ const buildEMYWMeta = (provider, drmSessionId) => {
     enjoyDeviceId: localStorage.getItem('emwy-deviceid'),
     tokens: state.providers[provider].tokens,
     licenseUrl: state.providers[provider].licenseUrl,
-    drmSessionId
+    drmSession: state.providers[provider].drmSession
   };
   return metaData;
 };
@@ -155,10 +155,13 @@ const initPlayer = async () => {
     // } else
     if (type == shaka.net.NetworkingEngine.RequestType.SEGMENT) {
       // Note that once there were some CORS errors that were cached. Disabling cache in the network tab of devtools resolve it.
-      // Consider adding a no-cache header here, but would prefer to do it only if we detect we are in retry.
+      // We can't add the cache-control header due to CORS. Consider clearing the Cache for sites that cause this cache poisoning
+      // Another approach is to cache-bust by adding something to the path as below
+      if (state.currentProvider === "DISNEYPLUS" && request.uris && request.uris.length > 0) request.uris[0] += `?vary=${generateDeviceId(6)}`;
       // console.log('there was a segment request', request);
     } else if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
-      const emywMeta = buildEMYWMeta(state.currentProvider, request.sessionId);
+      if (state.providers[state.currentProvider].drmSession) state.providers[state.currentProvider].drmSession.sessionId = request.sessionId;
+      const emywMeta = buildEMYWMeta(state.currentProvider);
       emywMeta.videoId = state.currentVideoId;
       request.headers = Object.assign(request.headers, buildEMYWHeader(emywMeta));
     }
@@ -173,6 +176,10 @@ const onErrorEvent = (event) => {
 const onError = (error) => {
   // Log the error.
   console.error('Error code', error.code, 'object', error);
+  if (state.attemptRegenerateIfFail) {
+    console.warn('Attempting to forceregenerate manifest...');
+    handlePlay(state.currentProvider, state.currentVideoId, true);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', initApp);
@@ -192,9 +199,10 @@ const buildEMYWHeader = (emywMetaJson) => {
 //   console.log(state);
 // };
 
-const requestManifest = async (provider, videoId) => {
+const requestManifest = async (provider, videoId, regenerateManifest) => {
   const emywMeta = buildEMYWMeta(provider);
   emywMeta.videoId = videoId;
+  emywMeta.forceRegenerate = regenerateManifest;
   const resManifest = await fetch(manifestPath, { method: 'POST', headers: buildEMYWHeader(emywMeta) });
   const bodyText = await resManifest.text();
   const manifestObject = JSON.parse(atob(caesarDecode(bodyText)));
@@ -202,19 +210,21 @@ const requestManifest = async (provider, videoId) => {
   return manifestObject;
 };
 
-const handlePlay = async (provider, videoId) => {
+const handlePlay = async (provider, videoId, regenerateManifest) => {
   console.log('Play event');
   // Try to load a manifest.
   try {
     state.currentProvider = provider;
     state.currentVideoId = videoId;
+    state.attemptRegenerateIfFail = !regenerateManifest;
     // Tell the proxy server to prepare the manifest
-    const enjoyManifestObject = await requestManifest(provider, videoId);
+    const enjoyManifestObject = await requestManifest(provider, videoId, regenerateManifest);
     if (enjoyManifestObject.failMessage) throw new Error(enjoyManifestObject.failMessage);
     const manifestUrl = `${manifestPath}/${enjoyManifestObject.manifestUrlKey}`;
     state.providers[provider].tokens = enjoyManifestObject.tokens; // update incase they were refreshed
     state.providers[provider].licenseUrl = enjoyManifestObject.licenseUrl;
-
+    state.providers[provider].drmSession = enjoyManifestObject.drmSession;
+    
     const NETFLIX_SERVER_CERT = "Cr0CCAMSEOVEukALwQ8307Y2+LVP+0MYh/HPkwUijgIwggEKAoIBAQDm875btoWUbGqQD8eAGuBlGY+Pxo8YF1LQR+Ex0pDONMet8EHslcZRBKNQ/09RZFTP0vrYimyYiBmk9GG+S0wB3CRITgweNE15cD33MQYyS3zpBd4z+sCJam2+jj1ZA4uijE2dxGC+gRBRnw9WoPyw7D8RuhGSJ95OEtzg3Ho+mEsxuE5xg9LM4+Zuro/9msz2bFgJUjQUVHo5j+k4qLWu4ObugFmc9DLIAohL58UR5k0XnvizulOHbMMxdzna9lwTw/4SALadEV/CZXBmswUtBgATDKNqjXwokohncpdsWSauH6vfS6FXwizQoZJ9TdjSGC60rUB2t+aYDm74cIuxAgMBAAE6EHRlc3QubmV0ZmxpeC5jb20SgAOE0y8yWw2Win6M2/bw7+aqVuQPwzS/YG5ySYvwCGQd0Dltr3hpik98WijUODUr6PxMn1ZYXOLo3eED6xYGM7Riza8XskRdCfF8xjj7L7/THPbixyn4mULsttSmWFhexzXnSeKqQHuoKmerqu0nu39iW3pcxDV/K7E6aaSr5ID0SCi7KRcL9BCUCz1g9c43sNj46BhMCWJSm0mx1XFDcoKZWhpj5FAgU4Q4e6f+S8eX39nf6D6SJRb4ap7Znzn7preIvmS93xWjm75I6UBVQGo6pn4qWNCgLYlGGCQCUm5tg566j+/g5jvYZkTJvbiZFwtjMW5njbSRwB3W4CrKoyxw4qsJNSaZRTKAvSjTKdqVDXV/U5HK7SaBA6iJ981/aforXbd2vZlRXO/2S+Maa2mHULzsD+S5l4/YGpSt7PnkCe25F+nAovtl/ogZgjMeEdFyd/9YMYjOS4krYmwp3yJ7m9ZzYCQ6I8RQN4x/yLlHG5RH/+WNLNUs6JAZ0fFdCmw=";
 
     player.configure({
@@ -222,28 +232,19 @@ const handlePlay = async (provider, videoId) => {
         servers: {
           'com.widevine.alpha': `${licensePath}/${enjoyManifestObject.manifestUrlKey}`,
           'com.microsoft.playready': `${licensePath}/${enjoyManifestObject.manifestUrlKey}`,
-        }
-      },
-      streaming: {
-        stallEnabled: false
-      }  
-    });
-    if (provider === "NETFLIX") {
-      player.configure({
-        drm: {
-          advanced: {
-            'com.widevine.alpha': {
-              serverCertificate: Uint8Array.from(window.atob(NETFLIX_SERVER_CERT), c => c.charCodeAt(0))
-            }
-          },
         },
-        // streaming: {
-        //   // Netflix video stalls/freezes a lot for some reason. Not sure if we should just enable this for all
-        //   // actually, the real issue was described here noticed on Chrome only: https://github.com/google/shaka-player/issues/438
-        //   stallEnabled: true 
-        // }
-      });
-    }
+        advanced: {
+          'com.widevine.alpha': {
+            serverCertificate: provider === "NETFLIX" ? Uint8Array.from(window.atob(NETFLIX_SERVER_CERT), c => c.charCodeAt(0)) : new Uint8Array(0)
+          }
+        },
+      },
+      // streaming: {
+      //   // Netflix video stalls/freezes a lot for some reason. Not sure if we should just enable this for all
+      //   // actually, the real issue was described here noticed on Chrome only: https://github.com/google/shaka-player/issues/438
+      //   stallEnabled: true 
+      // }
+    });
 
     // Originally I had the response sending the manifest text in the requestManfiest response object.
     // But Roku needs an actual url that returns the manifest string, not an object with the manifest somewhere in it.
