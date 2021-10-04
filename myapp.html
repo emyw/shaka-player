@@ -2,37 +2,49 @@
 <html>
 
 <head>
-  <!-- Shaka Player compiled library: -->
-  <!-- <script src="dist/shaka-player.compiled.debug.js"></script> -->
-  <script src="../node_modules/google-closure-library/closure/goog/base.js"></script>
-  <script src="../dist/deps.js"></script>
-  <script src="../lib/debug/asserts.js"></script>
-  <script src="../node_modules/eme-encryption-scheme-polyfill/index.js"></script>
-  <script src="../node_modules/less/dist/less.js"></script>
-  <script src="https://shaka-player-demo.appspot.com/node_modules/mux.js/dist/mux.min.js"></script>
-  <script src="shaka-player.uncompiled.js"></script>
-  <!-- Your application source: -->
-  <script src="myapp.js"></script>
+    <!-- Shaka Player compiled library: -->
+    <!-- <script src="dist/shaka-player.compiled.debug.js"></script> -->
+    <script src="../node_modules/google-closure-library/closure/goog/base.js"></script>
+    <script src="../dist/deps.js"></script>
+    <script src="../lib/debug/asserts.js"></script>
+    <script src="../node_modules/eme-encryption-scheme-polyfill/index.js"></script>
+    <script src="../node_modules/less/dist/less.js"></script>
+    <script src="https://shaka-player-demo.appspot.com/node_modules/mux.js/dist/mux.min.js"></script>
+    <script src="shaka-player.uncompiled.js"></script>
+    <!-- Your application source: -->
+    <script src="myapp.js"></script>
 </head>
 
-<body>
-  <video id="video" width="640" poster="//shaka-player-demo.appspot.com/assets/poster.jpg" controls autoplay></video>
-  <p>
-    <button type="button" onclick="handlePlay('DISNEYPLUS', '30ea8a44-797d-4da8-b776-2e3636a2bf5a')">Play
-      Disney</button>
-    <button type="button"
-      onclick="handlePlay('HBOMAX', 'urn:hbo:video:GXt53sgGlLsJHjQEAAAt0:feature:GXt53sgEhS5uSkwEAAAjI')">Play HBO
-      Max</button>
-    <button type="button" onclick="handlePlay('HULU', 'afba8f64-da93-4d1f-8d2c-dbc4af18c48d')">Play
-      Hulu</button>
-    <button type="button" onclick="handlePlay('AMAZON', 'B093CRJ83M')">Play
-      Amazon</button>
-    <!-- <button type="button" onclick="handlePlay('YOUTUBE', 'G1TdGkmspDE')">Play
-      Youtube</button> -->
-    <button type="button" onclick="handlePlay('NETFLIX', '80117490')">Play
-      Netflix</button>
-  </p>
-  <!-- <iframe width="560" height="315"
+<body style="margin: 0">
+    <div style="width: 800px">
+        <div style="height: 400px; background-color: black">
+            <video id="video" style="width: 100%; height: 100%"
+                poster="//shaka-player-demo.appspot.com/assets/poster.jpg" controls autoplay>
+            </video>
+        </div>
+        <div style="display: flex; justify-content: space-between; max-width: 460px; margin: 14px auto 0 auto">
+            <button type="button" onclick="handlePlay('DISNEYPLUS', '30ea8a44-797d-4da8-b776-2e3636a2bf5a')">Play
+                Disney
+            </button>
+            <button type="button"
+                onclick="handlePlay('HBOMAX', 'urn:hbo:video:GXt53sgGlLsJHjQEAAAt0:feature:GXt53sgEhS5uSkwEAAAjI')">Play
+                HBO
+                Max
+            </button>
+            <button type="button" onclick="handlePlay('HULU', 'afba8f64-da93-4d1f-8d2c-dbc4af18c48d')">Play
+                Hulu
+            </button>
+            <button type="button" onclick="handlePlay('AMAZON', 'B093CRJ83M')">Play
+                Amazon
+            </button>
+            <!-- <button type="button" onclick="handlePlay('YOUTUBE', 'G1TdGkmspDE')">Play
+        Youtube</button> -->
+            <button type="button" onclick="handlePlay('NETFLIX', '80117490')">Play
+                Netflix
+            </button>
+        </div>
+    </div>
+    <!-- <iframe width="560" height="315"
     src="https://www.youtube.com/embed/f8_FsBQUW_k?controls=0&showinfo=0&autoplay=1&cc_load_policy=0&iv_load_policy=3&modestbranding=1&rel=0"
     title="YouTube video player" frameborder="0"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
