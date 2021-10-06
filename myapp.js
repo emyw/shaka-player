@@ -33,8 +33,8 @@ const caesarDecode = (source) => {
     return decipheredText;
 };
 
-const proxyServerRoot = "https://proxy-api.enjoymoviesyourway.com";
-// const proxyServerRoot = "http://localhost:4012";
+// const proxyServerRoot = "https://proxy-api.enjoymoviesyourway.com";
+const proxyServerRoot = "http://localhost:4012";
 // const sessionPath = `${proxyServerRoot}/session`;
 const manifestPath = `${proxyServerRoot}/manifest`;
 const licensePath = `${proxyServerRoot}/license`;
