@@ -1138,7 +1138,7 @@ shaka.ui.Controls = class extends shaka.util.FakeEventTarget {
       // Make sure the state is up-to-date before showing it.
       this.updateTimeAndSeekRange_();
 
-      this.controlsContainer_.setAttribute('shown', 'true');
+      // this.controlsContainer_.setAttribute('shown', 'true');
       this.fadeControlsTimer_.stop();
     } else {
       this.fadeControlsTimer_.tickAfter(/* seconds= */ this.config_.fadeDelay);
