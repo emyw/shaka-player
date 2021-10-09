@@ -10,23 +10,34 @@
   <script src="../node_modules/eme-encryption-scheme-polyfill/index.js"></script>
   <script src="../node_modules/less/dist/less.js"></script>
   <script src="https://shaka-player-demo.appspot.com/node_modules/mux.js/dist/mux.min.js"></script>
-  <script src="shaka-player.uncompiled.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aes-js/3.1.2/index.min.js"
+    integrity="sha512-LOqfKFwH2W3jeb0NzXcImFlSyoL7hjsWbZvIeKNOaZw1gFw+yKTE/QUDGLit2KWdd57qd6IgMDkppK2tkwIEhA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="shaka-player.uncompiled.js"></script>4
+  <!-- IMA HTML5 SDK (for serving Client Side ads): -->
+  <script type="text/javascript" src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
   <!-- Your application source: -->
   <script src="myapp.js"></script>
 </head>
 
 <body>
-  <video id="video" width="640" poster="//shaka-player-demo.appspot.com/assets/poster.jpg" controls autoplay></video>
+  <div id="adsContainer">
+    <video id="video" width="640" poster="//shaka-player-demo.appspot.com/assets/poster.jpg" controls autoplay></video>
+  </div>
   <p>
     <button type="button" onclick="handlePlay('DISNEYPLUS', '30ea8a44-797d-4da8-b776-2e3636a2bf5a')">Play
       Disney</button>
     <button type="button"
       onclick="handlePlay('HBOMAX', 'urn:hbo:video:GXt53sgGlLsJHjQEAAAt0:feature:GXt53sgEhS5uSkwEAAAjI')">Play HBO
       Max</button>
-    <button type="button" onclick="handlePlay('HULU', 'afba8f64-da93-4d1f-8d2c-dbc4af18c48d')">Play
-      Hulu</button>
-    <button type="button" onclick="handlePlay('AMAZON', 'B093CRJ83M')">Play
-      Amazon</button>
+    <button type="button" onclick="handlePlay('HULU', '0244da84-dd50-4b7c-9497-c304d0acfd4a')">Play
+      <!--'afba8f64-da93-4d1f-8d2c-dbc4af18c48d')">Play -->
+      Hulu
+    </button>
+    <button type="button" onclick="handlePlay('AMAZON', 'B0195UCY90')">Play
+      <!--'B093CRJ83M')">Play-->
+      Amazon
+    </button>
     <!-- <button type="button" onclick="handlePlay('YOUTUBE', 'G1TdGkmspDE')">Play
       Youtube</button> -->
     <button type="button" onclick="handlePlay('NETFLIX', '80117490')">Play
