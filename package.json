@@ -73,7 +73,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "ws --cors.origin * -p 6006",
-    "prepublishOnly": "python build/checkversion.py && python build/all.py --force"
+    "prepublishOnly": "python build/checkversion.py && python build/all.py --force",
+    "build": "python build/all.py"
   },
   "dependencies": {
     "eme-encryption-scheme-polyfill": "^2.0.3"

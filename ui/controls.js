@@ -115,7 +115,7 @@ shaka.ui.Controls = class extends shaka.util.FakeEventTarget {
      * @private {shaka.util.Timer}
      */
     this.fadeControlsTimer_ = new shaka.util.Timer(() => {
-      this.controlsContainer_.removeAttribute('shown');
+      // this.controlsContainer_.removeAttribute('shown');
 
       // If there's an overflow menu open, keep it this way for a couple of
       // seconds in case a user immediately initiates another mouse move to
@@ -1138,7 +1138,7 @@ shaka.ui.Controls = class extends shaka.util.FakeEventTarget {
       // Make sure the state is up-to-date before showing it.
       this.updateTimeAndSeekRange_();
 
-      this.controlsContainer_.setAttribute('shown', 'true');
+      // this.controlsContainer_.setAttribute('shown', 'true');
       this.fadeControlsTimer_.stop();
     } else {
       this.fadeControlsTimer_.tickAfter(/* seconds= */ this.config_.fadeDelay);

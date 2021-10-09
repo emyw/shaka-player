@@ -114,18 +114,9 @@ const initState = (initial) => {
           expiresAt: 1630383042789,
         }
       },
-      // YOUTUBE: {
-      //   tokens: {
-      //     cookies: "VISITOR_INFO1_LIVE=ZUWs-NLdWwQ; CONSENT=YES+US.en+201912; NID=220=Ph1FCQAiOWWUvSHHVWJVwM9pSBY04jALTcuyHhm2AaXHBoWWCi-kR9k5gQB0qPZNqtKy0_EE6WPjlU_0zxngtuOoG2emMNipbeb3ecH1elc4LQICWThSHxlK6x8_hJFHm--ny3--amOWCDAlx_CvX3XlIqziCyW4xTJL65AJVPM; PREF=f6=80&tz=America.Los_Angeles&al=en&f5=30000; LOGIN_INFO=AFmmF2swRQIgaRnHZSyWnER6XkLJqTMqxoevP50j2h6sEBtghse3YGwCIQCs11HCPlwuvH7_qbk5nT65Q-rUwlqjlyVfd2PfJucedg:QUQ3MjNmeUdqeF96NjdaRHp5Q1N5UEVPeFc0OGR4RnExS1dWclBwSDRaZFB5UVBnRElRcVhydXJHQ0lEWkpfOUkyVS11M2Q3V2NpYi13ekEyXzJGS0ZoRVA3MktXZlVjU0tjT1ktUC1xNDRVZ1FRUWtyQnc2RFdBb1ZqWENEOGsyajZ1WnE4S2g3NHRMMXYtSEo3YmM1SjFpRV9qb0V0OXJB; YSC=5KgzbKp09KQ; SID=BgjQnMCdg09ZVGbZgCLLhaaVcKX8CxDGe7D9P3P2pmZCY9DPcjG3qjB9POHd6odOiD3OOQ.; __Secure-1PSID=BgjQnMCdg09ZVGbZgCLLhaaVcKX8CxDGe7D9P3P2pmZCY9DPcePw2ZvN0PeTD_3H0hSI0A.; __Secure-3PSID=BgjQnMCdg09ZVGbZgCLLhaaVcKX8CxDGe7D9P3P2pmZCY9DPfBG7ArRsT1y__BbxoAhweg.; HSID=AXqswZXERx5MMG82T; SSID=AUdamZO0U7NHythYb; APISID=9CK9ISJabveFv6Ut/AO45SCrXmy0ZE8CT4; SAPISID=LIG4OWrC86w7ZJ0j/AFHFbNtifEQnLMBoE; __Secure-1PAPISID=LIG4OWrC86w7ZJ0j/AFHFbNtifEQnLMBoE; __Secure-3PAPISID=LIG4OWrC86w7ZJ0j/AFHFbNtifEQnLMBoE; SIDCC=AJi4QfHKTuPiiYpTHD7cAhZlTR8r7pi6ErjFrPGHGze6TqnelAlzayqawECCFhopu5XTJdzh2A; __Secure-3PSIDCC=AJi4QfED1ECrAlveCXpMFJujbJIjVKrv6vXR3fmIOgv3sQDTQQNE7_Gy2bCtr77qc1BmtGGmtlw;",
-      //     expiresAt: 1630383042789,
-      //   }
-      // },
-      NETFLIX: {
-        tokens: { accessToken: { userName: "chad@chadistheman.com", password: "YSTRAYENT" }, expiresAt: 1630383042789 }
-      }
-    }
-  };
-};
+    },
+  }
+}
 
 const buildEMYWMeta = (provider) => {
   if (!state.providers[provider]) state.providers[provider] = initState(true).providers[provider];
@@ -323,6 +314,25 @@ const handlePlay = async (provider, videoId, regenerateManifest) => {
       // }
     });
 
+    player.configure({
+      drm: {
+        servers: {
+          'com.widevine.alpha': `${licensePath}/${enjoyManifestObject.manifestUrlKey}`,
+          'com.microsoft.playready': `${licensePath}/${enjoyManifestObject.manifestUrlKey}`,
+        },
+        advanced: {
+          'com.widevine.alpha': {
+            serverCertificate: provider === "NETFLIX" ? Uint8Array.from(window.atob(NETFLIX_SERVER_CERT), c => c.charCodeAt(0)) : new Uint8Array(0)
+          }
+        },
+      },
+      // streaming: {
+      //   // Netflix video stalls/freezes a lot for some reason. Not sure if we should just enable this for all
+      //   // actually, the real issue was described here noticed on Chrome only: https://github.com/google/shaka-player/issues/438
+      //   stallEnabled: true
+      // }
+    });
+
     if (enjoyManifestObject.manifest) {
       console.log('loading manifest after POST');
       const mimeType = enjoyManifestObject.manifest.indexOf('#EXTM3U') > -1 ? 'x-mpegurl' : 'dash+xml'
@@ -338,5 +348,4 @@ const handlePlay = async (provider, videoId, regenerateManifest) => {
     // onError is executed if the asynchronous load fails.
     onError(e);
   }
-
 }
