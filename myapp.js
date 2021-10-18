@@ -53,6 +53,8 @@ const aesDecrypt = (encrypted) => {
 const proxyServerRoot = "http://localhost:4012";
 // const sessionPath = `${proxyServerRoot}/session`;
 const manifestPath = `${proxyServerRoot}/manifest`;
+const awaitPath = `${proxyServerRoot}/await-request`;
+const processPath = `${proxyServerRoot}/process-response`;
 const tagsPath = `${proxyServerRoot}/enjoy-tags`;
 const licensePath = `${proxyServerRoot}/license`;
 
@@ -114,6 +116,12 @@ const initState = (initial) => {
           expiresAt: 1630383042789,
         }
       },
+      NETFLIX: {
+        tokens: {
+          accessToken: { userName: "media@medlor.com", password: "$MeDia1!" },
+          expiresAt: 1630383042789,
+        }
+      },
     },
   }
 }
@@ -130,6 +138,15 @@ const buildEMYWMeta = (provider) => {
     drmSession: state.providers[provider].drmSession
   };
   return metaData;
+};
+
+const proxyThroughBackground = (proxyRequest) => {
+  return new Promise((resolve) => {
+    chrome.runtime.sendMessage('bebnhildgpjjkldddapclelgaapgfjmj', { action: 'proxyRequest', proxyRequest }, (res) => {
+      console.log(res);
+      resolve(res);
+    })
+  });
 };
 
 const initPlayer = async () => {
@@ -181,6 +198,22 @@ const initPlayer = async () => {
       if (state.providers[state.currentProvider].drmSession) state.providers[state.currentProvider].drmSession.sessionId = request.sessionId;
       const emywMeta = buildEMYWMeta(state.currentProvider);
       emywMeta.videoId = state.currentVideoId;
+      if (state.currentProvider === "NETFLIX") {
+        emywMeta.supportsClientProxy = true;
+        // tell the server to await a license request
+        fetch(`${awaitPath}/${state.providers[state.currentProvider].manifestPath}`, { method: 'GET' }).then(async (res) => {
+          // client proxy the request then send the response back to the proxy
+          const body = await res.text();
+          const jsonRes = JSON.parse(body);
+          const { request } = jsonRes;
+          const { url, options } = request;
+          const payload = decodeURIComponent(options.body);
+          proxyRequest = { url, options: Object.assign(options, { body: payload }) };
+          proxiedRes = await proxyThroughBackground(proxyRequest);
+          // send the response back to the proxy-api
+          fetch(`${processPath}/${state.providers[state.currentProvider].manifestPath}`, { method: 'POST', body: encodeURIComponent(proxiedRes.body) });
+        });
+      }
       request.headers = Object.assign(request.headers, buildEMYWHeader(emywMeta));
     }
   });
@@ -252,10 +285,42 @@ const requestManifest = async (provider, videoId, regenerateManifest) => {
   emywMeta.videoId = videoId;
   emywMeta.includeFullManifestText = true;
   emywMeta.forceRegenerate = true;
+  if (provider === "NETFLIX") emywMeta.supportsClientProxy = true;
   // emywMeta.forceRegenerate = regenerateManifest;
-  const resManifest = await fetch(manifestPath, { method: 'POST', headers: buildEMYWHeader(emywMeta) });
-  const bodyText = await resManifest.text();
-  const manifestObject = JSON.parse(aesDecrypt(bodyText));
+  let manifestObject;
+  let lastCode;
+  let proxiedRes;
+  let proxyRequest;
+  let proxiedResponseBody = null;
+  while (true) {
+    if (proxiedRes) {
+      proxiedResponseBody = { proxiedResponse: { response: proxiedRes.body, code: proxyRequest.code, state: proxyRequest.state } };
+    }
+    const res = await fetch(manifestPath, {
+      method: 'POST',
+      headers: buildEMYWHeader(emywMeta),
+      body: proxiedResponseBody ? JSON.stringify(proxiedResponseBody) : "",
+    });
+    proxiedResponseBody = null;
+    const bodyText = await res.text();
+    const jsonRes = JSON.parse(aesDecrypt(bodyText));
+    ({ proxyRequest } = jsonRes);
+    if (proxyRequest) {
+      if (lastCode === proxyRequest.code) {
+        console.log('caught repeating ourself. aborting.');
+        break;
+      }
+      lastCode = proxyRequest.code;
+      const { request } = proxyRequest;
+      proxiedRes = await proxyThroughBackground(request);
+    } else {
+      manifestObject = jsonRes;
+      break;
+    }
+  }
+  // const resManifest = await fetch(manifestPath, { method: 'POST', headers: buildEMYWHeader(emywMeta) });
+  // const bodyText = await resManifest.text();
+  // const manifestObject = JSON.parse(aesDecrypt(bodyText));
   console.log(manifestObject);
   return manifestObject;
 };
@@ -264,7 +329,7 @@ const requestTags = async () => {
   const provider = state.currentProvider;
   const emywMeta = buildEMYWMeta(provider);
   emywMeta.videoId = state.currentVideoId;
-  emywMeta.subtitleUrl = state.providers[provider].subtitleUrls[0]; // assume english is the only entry at this point
+  emywMeta.subtitle = state.providers[provider].subtitles[0]; // assume english is the only entry at this point
   const resManifest = await fetch(tagsPath, { method: 'GET', headers: buildEMYWHeader(emywMeta) });
   const tags = await resManifest.json();
   return tags;
@@ -285,9 +350,11 @@ const handlePlay = async (provider, videoId, regenerateManifest) => {
     state.providers[provider].tokens = enjoyManifestObject.tokens; // update incase they were refreshed
     state.providers[provider].licenseUrl = enjoyManifestObject.licenseUrl;
     state.providers[provider].drmSession = enjoyManifestObject.drmSession;
-    state.providers[provider].subtitleUrls = enjoyManifestObject.subtitleUrls;
+    state.providers[provider].subtitles = enjoyManifestObject.subtitles;
+    const requestKey = generateDeviceId(10); // generate some unique thing as a requestKey
+    state.providers[provider].manifestPath = `${enjoyManifestObject.manifestUrlKey}?p=${requestKey}`;
 
-    // Now that we have the manifest and subtitleUrls, initiate enjoy tag loading...
+    // Now that we have the manifest and subtitles, initiate enjoy tag loading...
     requestTags().then((tags) => {
       console.log(tags);
     })
@@ -300,8 +367,8 @@ const handlePlay = async (provider, videoId, regenerateManifest) => {
     player.configure({
       drm: {
         servers: {
-          'com.widevine.alpha': `${licensePath}/${enjoyManifestObject.manifestUrlKey}`,
-          'com.microsoft.playready': `${licensePath}/${enjoyManifestObject.manifestUrlKey}`,
+          'com.widevine.alpha': `${licensePath}/${state.providers[provider].manifestPath}`,
+          'com.microsoft.playready': `${licensePath}/${state.providers[provider].manifestPath}`,
         },
         advanced: {
           'com.widevine.alpha': {
@@ -311,25 +378,6 @@ const handlePlay = async (provider, videoId, regenerateManifest) => {
       },
       // streaming: { // Not sure what this does actually
       //   stallEnabled: true 
-      // }
-    });
-
-    player.configure({
-      drm: {
-        servers: {
-          'com.widevine.alpha': `${licensePath}/${enjoyManifestObject.manifestUrlKey}`,
-          'com.microsoft.playready': `${licensePath}/${enjoyManifestObject.manifestUrlKey}`,
-        },
-        advanced: {
-          'com.widevine.alpha': {
-            serverCertificate: provider === "NETFLIX" ? Uint8Array.from(window.atob(NETFLIX_SERVER_CERT), c => c.charCodeAt(0)) : new Uint8Array(0)
-          }
-        },
-      },
-      // streaming: {
-      //   // Netflix video stalls/freezes a lot for some reason. Not sure if we should just enable this for all
-      //   // actually, the real issue was described here noticed on Chrome only: https://github.com/google/shaka-player/issues/438
-      //   stallEnabled: true
       // }
     });
 
