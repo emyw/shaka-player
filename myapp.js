@@ -49,8 +49,8 @@ const aesDecrypt = (encrypted) => {
   return value;
 };
 
-// const proxyServerRoot = "https://proxy-api.enjoymoviesyourway.com";
-const proxyServerRoot = "http://localhost:4012";
+const proxyServerRoot = "https://proxy-api.enjoymoviesyourway.com";
+// const proxyServerRoot = "http://localhost:4012";
 // const sessionPath = `${proxyServerRoot}/session`;
 const manifestPath = `${proxyServerRoot}/manifest`;
 const awaitPath = `${proxyServerRoot}/await-request`;
