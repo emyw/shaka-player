@@ -525,8 +525,8 @@ const requestTags = async () => {
   const emywMeta = buildEMYWMeta(provider);
   emywMeta.videoId = state.currentVideoId;
   emywMeta.subtitle = state.providers[provider].subtitles[0]; // assume english is the only entry at this point
-  const resManifest = await fetch(tagsPath, { method: 'GET', headers: buildEMYWHeader(emywMeta) });
-  const tags = await resManifest.json();
+  const resTags = await fetch(tagsPath, { method: 'GET', headers: buildEMYWHeader(emywMeta) });
+  const tags = await resTags.json();
   return tags;
 };
 
