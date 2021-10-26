@@ -49,8 +49,8 @@ const aesDecrypt = (encrypted) => {
   return value;
 };
 
-const proxyServerRoot = "https://proxy-api.enjoymoviesyourway.com";
-// const proxyServerRoot = "http://localhost:4012";
+// const proxyServerRoot = "https://proxy-api.enjoymoviesyourway.com";
+const proxyServerRoot = "http://localhost:4012";
 // const sessionPath = `${proxyServerRoot}/session`;
 const manifestPath = `${proxyServerRoot}/manifest`;
 const awaitPath = `${proxyServerRoot}/await-request`;
@@ -122,6 +122,13 @@ const initState = (initial) => {
           expiresAt: 1630383042789,
         }
       },
+      YOUTUBE: {
+        tokens: {
+          // cookies: "session-id=133-8373025-1570834; ubid-main=130-0828590-3776626; x-main=\"ms4Q5GPjHIQfotg0j@VKNsq@DgFAM7C2\"; at-main=Atza|IwEBIAdEzCoHdjBLeUvo2WfVL68YZT-xXca-m4NJhi_r5STovJNSRaJjWoqtMmmVDdh9bTsXyU-q27qg8B92FoqGGG2mesp3Pw-dsheBiB24RPbH5MnVYIQn5r1nwIdNI9SrBVtzuiWyuOkdg5Lb8lXLbWZzmMOwcWuZFshaXjmkCg7fLMyrVUR1xNTb0Af0bLfb5ugK8JPFccJbWv-H7qiVe3Mu; sess-at-main=\"NyG2KETCK+qyh86Z+y/idArdjHlyux7YmFkO0FoTR9E=\"; sst-main=Sst1|PQFzfKHI8GqcDX6utsyuoK0ECQ9qDA5H5Te8TcU4nK0J5QxJvNE31j05FPnvMNG2PCgG3nOJpYCtNxuWT-FRm46m9cd8D0cu9j9dpDLBRX5e9SvquSv7loSMNA6FqLeekPM4hvwot9vm3JCl6wRWinz8kNyUzrYvVQWekaJ4nhvDCUbdK6bRlphRp1QJUdLZ7e1YGEu-gPGn0s-_SxmRC7I0DcWofHptaLcjhrklZAjf8XZbnlBYT5YVmDOtyS911ZafGGzQwI4HufRdrKMJRhB1dlogK7XZGd_0r6ieM4ldIu4; lc-main=en_US; session-id-time=2082787201l; i18n-prefs=USD; csm-hit=tb:s-ZD34YQBJR1V8MZWQTQFC|1632497663456&t:1632497663457&adb:adblk_no; session-token=\"ctlMkhpHIxXu9TYYZQCcHImF3bU9/d+JafVKJjqnzo43DoKifYvTZjtPuv6Om14CzUm+HZXWFFAY+xqCzSJh1kgl03CEAbuI1/A0pGxan8rcWrpRNUa2/EDtRTG78Sj0zN71bQyvdLB7NtoCW+vZoC39C5xwQGFNcMYjZpdlTpC/A382+3BUV2DyoGvy83oWyiJbLeGZDtR+0LgQcOvJJQ==\"; skin=noskin",
+          cookies: "VISITOR_INFO1_LIVE=ZUWs-NLdWwQ;path=/;domain=.youtube.com; CONSENT=YES+US.en+201912;path=/;domain=.youtube.com; NID=220=Ph1FCQAiOWWUvSHHVWJVwM9pSBY04jALTcuyHhm2AaXHBoWWCi-kR9k5gQB0qPZNqtKy0_EE6WPjlU_0zxngtuOoG2emMNipbeb3ecH1elc4LQICWThSHxlK6x8_hJFHm--ny3--amOWCDAlx_CvX3XlIqziCyW4xTJL65AJVPM;path=/;domain=.youtube.com; PREF=f6=80&tz=America.Los_Angeles&al=en&f5=30000;path=/;domain=.youtube.com; _ga=GA1.2.1798331689.1632745190;path=/;domain=.youtube.com; _gcl_au=1.1.1955434094.1632745190;path=/;domain=.youtube.com; cp_enjoy___Secure-3PAPISID=eyJuYW1lIjoiX19TZWN1cmUtM1BBUElTSUQiLCJ2YWx1ZSI6InROZldSRkJNUjlTRFFuNTIvQXhsQnNUWC1hdEMzYUJRamciLCJkb21haW4iOiIueW91dHViZS5jb20iLCJleHBpcmVzIjoiMjAyMy0wOS0yN1QxOTo0NjozMC4wMDBaIiwicGF0aCI6Ii8iLCJzZWN1cmUiOnRydWUsInByaW9yaXR5IjoiSElHSCIsInNhbWVTaXRlIjoibm9uZSJ9;path=/;domain=.youtube.com; cp_enjoy___Secure-1PAPISID=eyJuYW1lIjoiX19TZWN1cmUtMVBBUElTSUQiLCJ2YWx1ZSI6InROZldSRkJNUjlTRFFuNTIvQXhsQnNUWC1hdEMzYUJRamciLCJkb21haW4iOiIueW91dHViZS5jb20iLCJleHBpcmVzIjoiMjAyMy0wOS0yN1QxOTo0NjozMC4wMDBaIiwicGF0aCI6Ii8iLCJzZWN1cmUiOnRydWUsInByaW9yaXR5IjoiSElHSCIsInNhbWVwYXJ0eSI6IiJ9;path=/;domain=.youtube.com; cp_enjoy_SAPISID=eyJuYW1lIjoiU0FQSVNJRCIsInZhbHVlIjoidE5mV1JGQk1SOVNEUW41Mi9BeGxCc1RYLWF0QzNhQlFqZyIsImRvbWFpbiI6Ii55b3V0dWJlLmNvbSIsImV4cGlyZXMiOiIyMDIzLTA5LTI3VDE5OjQ2OjMwLjAwMFoiLCJwYXRoIjoiLyIsInNlY3VyZSI6dHJ1ZSwicHJpb3JpdHkiOiJISUdIIn0%3D;path=/;domain=.youtube.com; cp_enjoy_APISID=eyJuYW1lIjoiQVBJU0lEIiwidmFsdWUiOiI3LWJCMTk4VzFneWV2b24wL0E2bEY0b0NFQko0dWVhdFdPIiwiZG9tYWluIjoiLnlvdXR1YmUuY29tIiwiZXhwaXJlcyI6IjIwMjMtMDktMjdUMTk6NDY6MzAuMDAwWiIsInBhdGgiOiIvIiwicHJpb3JpdHkiOiJISUdIIn0%3D;path=/;domain=.youtube.com; cp_enjoy_SSID=eyJuYW1lIjoiU1NJRCIsInZhbHVlIjoiQXFGNkhSNmxCQ1BhSzlTby0iLCJkb21haW4iOiIueW91dHViZS5jb20iLCJleHBpcmVzIjoiMjAyMy0wOS0yN1QxOTo0NjozMC4wMDBaIiwicGF0aCI6Ii8iLCJzZWN1cmUiOnRydWUsImh0dHBPbmx5Ijp0cnVlLCJwcmlvcml0eSI6IkhJR0gifQ%3D%3D;path=/;domain=.youtube.com; cp_enjoy_HSID=eyJuYW1lIjoiSFNJRCIsInZhbHVlIjoiQWNBeDZhQXVubXcyMWNCOVMiLCJkb21haW4iOiIueW91dHViZS5jb20iLCJleHBpcmVzIjoiMjAyMy0wOS0yN1QxOTo0NjozMC4wMDBaIiwicGF0aCI6Ii8iLCJodHRwT25seSI6dHJ1ZSwicHJpb3JpdHkiOiJISUdIIn0%3D;path=/;domain=.youtube.com; cp_enjoy___Secure-3PSID=eyJuYW1lIjoiX19TZWN1cmUtM1BTSUQiLCJ2YWx1ZSI6IkNnalFuS3JoSEdCaWoxQ3BEVmtuWGQ3TjMtRE9TOTI3V2E1Um42RTJGQjNSUnI4SWRXTVhIRmdMd1pRN01tUWJqY2dlc3cuIiwiZG9tYWluIjoiLnlvdXR1YmUuY29tIiwiZXhwaXJlcyI6IjIwMjMtMDktMjdUMTk6NDY6MzAuMDAwWiIsInBhdGgiOiIvIiwic2VjdXJlIjp0cnVlLCJodHRwT25seSI6dHJ1ZSwicHJpb3JpdHkiOiJISUdIIiwic2FtZVNpdGUiOiJub25lIn0%3D;path=/;domain=.youtube.com; cp_enjoy___Secure-1PSID=eyJuYW1lIjoiX19TZWN1cmUtMVBTSUQiLCJ2YWx1ZSI6IkNnalFuS3JoSEdCaWoxQ3BEVmtuWGQ3TjMtRE9TOTI3V2E1Um42RTJGQjNSUnI4SUdaQXZtS0ZyNDR5cW1zUGJxYVk0ancuIiwiZG9tYWluIjoiLnlvdXR1YmUuY29tIiwiZXhwaXJlcyI6IjIwMjMtMDktMjdUMTk6NDY6MzAuMDAwWiIsInBhdGgiOiIvIiwic2VjdXJlIjp0cnVlLCJodHRwT25seSI6dHJ1ZSwicHJpb3JpdHkiOiJISUdIIiwic2FtZXBhcnR5IjoiIn0%3D;path=/;domain=.youtube.com; cp_enjoy_SID=eyJuYW1lIjoiU0lEIiwidmFsdWUiOiJDZ2pRbktyaEhHQmlqMUNwRFZrblhkN04zLURPUzkyN1dhNVJuNkUyRkIzUlJyOElJajZpUzY4bE1BM3N1SHU2eHdPNU53LiIsImRvbWFpbiI6Ii55b3V0dWJlLmNvbSIsImV4cGlyZXMiOiIyMDIzLTA5LTI3VDE5OjQ2OjMwLjAwMFoiLCJwYXRoIjoiLyIsInByaW9yaXR5IjoiSElHSCJ9;path=/;domain=.youtube.com; cp_enjoy___Secure-3PSIDCC=eyJuYW1lIjoiX19TZWN1cmUtM1BTSURDQyIsInZhbHVlIjoiQUppNFFmR1J3dWJ6cmFqX1h3NHpBdXNLTlg4Z3FXSlZiVUVYSkp0NUtaeGpkUC14anJqTVA2cEpHeVBDV0xJMEZjTFcyUnhXIiwiZXhwaXJlcyI6IjIwMjItMDktMjlUMTk6MzQ6MzAuMDAwWiIsInBhdGgiOiIvIiwiZG9tYWluIjoiLnlvdXR1YmUuY29tIiwic2VjdXJlIjp0cnVlLCJodHRwT25seSI6dHJ1ZSwicHJpb3JpdHkiOiJoaWdoIiwic2FtZVNpdGUiOiJub25lIn0%3D;path=/;domain=.youtube.com; cp_enjoy_SIDCC=eyJuYW1lIjoiU0lEQ0MiLCJ2YWx1ZSI6IkFKaTRRZkVLU0Z3R3g2VHVuRTNaWHhFdkI2a2FzdDctTGZwQXFVemhBUno1eUYzNnJOS0doVllIajd2ZG55Xy1YUHpneTVDTXBnIiwiZXhwaXJlcyI6IjIwMjItMDktMjlUMTk6MzQ6MzAuMDAwWiIsInBhdGgiOiIvIiwiZG9tYWluIjoiLnlvdXR1YmUuY29tIiwicHJpb3JpdHkiOiJoaWdoIn0%3D;path=/;domain=.youtube.com; _gcl_dc=GCL.1633180748.CjwKCAjwhuCKBhADEiwA1HegORgkckNCTqkzYFVH2JwDjJci7kgk2E-T4GV-Z-xEe4YfcD70cx-YlBoCXHsQAvD_BwE;path=/;domain=.youtube.com; _gcl_aw=GCL.1633180748.CjwKCAjwhuCKBhADEiwA1HegORgkckNCTqkzYFVH2JwDjJci7kgk2E-T4GV-Z-xEe4YfcD70cx-YlBoCXHsQAvD_BwE;path=/;domain=.youtube.com; _gac_UA-90547405-1=1.1633180748.CjwKCAjwhuCKBhADEiwA1HegORgkckNCTqkzYFVH2JwDjJci7kgk2E-T4GV-Z-xEe4YfcD70cx-YlBoCXHsQAvD_BwE;path=/;domain=.youtube.com; YSC=x03Iw5AOz4w;path=/;domain=.youtube.com; LOGIN_INFO=AFmmF2swRAIgdx-UQ6jDxzSfW1nuuGWXOqV4yadAAViW92VwZcmQ71QCIFGCA4z8UXqowcBtU_DkHmobMZ_IQT9-9u1AQICLT8Wr:QUQ3MjNmd29DNXFDQVhiQmZjcG1DNWljcnl5elJ3bkFUSWZRY3k1QTBOOW02QzlXT0k5SlA2bDVJbTRvZjdZN1pFWlhydVRfcFFGY0VMc2VlN3ZsRHk1Si1iRUVNNUw3aEFlWXhPNTltSFREOTR4N0ZaMjZoa1lLd3hTVWhkbnlQaVVoU08xNVN6MmRKNlFxTC13RDhkdV9aRDZhQVFEeEFR;path=/;domain=.youtube.com; SID=DQjgTYzk_krNuarhemp-T1gvhrH0w83fW8PuEB0FyX2tbjQL93iA1R5pJk2q6d2wA73pzA.;path=/;domain=.youtube.com; __Secure-1PSID=DQjgTYzk_krNuarhemp-T1gvhrH0w83fW8PuEB0FyX2tbjQLX3uxmsbCCnLX-4Gk525oVw.;path=/;domain=.youtube.com; __Secure-3PSID=DQjgTYzk_krNuarhemp-T1gvhrH0w83fW8PuEB0FyX2tbjQLL04yNklR2SAMQeRUXhcofA.;path=/;domain=.youtube.com; HSID=AW0xGi_h57c1wDh_s;path=/;domain=.youtube.com; SSID=AdG4cA6m3oli7PmLI;path=/;domain=.youtube.com; APISID=CmCT-LJkXEbEYnGq/Aq7CBzm8nYqk1_GQ9;path=/;domain=.youtube.com; SAPISID=EAwK6tIW68GZaRXc/AAN20CWXFnvuPHsGe;path=/;domain=.youtube.com; __Secure-1PAPISID=EAwK6tIW68GZaRXc/AAN20CWXFnvuPHsGe;path=/;domain=.youtube.com; __Secure-3PAPISID=EAwK6tIW68GZaRXc/AAN20CWXFnvuPHsGe;path=/;domain=.youtube.com; SIDCC=AJi4QfH1SNRP-EJ0hmf3WN6Qi1PkaKew0PW1XkRIwY8HVT2xrA4idhjF268zkqM9cf7blSuw;path=/;domain=.youtube.com; __Secure-3PSIDCC=AJi4QfEUI4ALNmV3K5GnzS4q4ECkvlQ4PcvNzkX09OsUMIw94Sv8JnWlhwMpEvoARBJ9J7rXhg;path=/;domain=.youtube.com; ",
+          expiresAt: 1630383042789,
+        }
+      },
     },
   }
 }
@@ -172,6 +179,167 @@ const initPlayer = async () => {
     preferredAudioLanguage: 'en',
   });
 
+  // const fetchOrig = fetch;
+  // fetch = (args) => {
+  //   fetchOrig(args);
+  // };
+  // const fetchOrig = fetch;
+
+  // shaka.net.NetworkingEngine.registerScheme('https', (uri, request, requestType, progressUpdated, headersReceived) => {
+  //   console.log('hey', uri);
+  //   // shaka.net.HttpFetchPlugin.parse(uri, request, requestType, progressUpdated, headersReceived);
+  //   const headers = new shaka.net.HttpFetchPlugin.Headers_();
+  //   shaka.util.MapUtils.asMap(request.headers).forEach((value, key) => {
+  //     headers.append(key, value);
+  //   });
+  //   const init = {
+  //     // Edge does not treat null as undefined for body; https://bit.ly/2luyE6x
+  //     body: request.body || undefined,
+  //     headers: headers,
+  //     method: request.method,
+  //     signal: controller.signal,
+  //     credentials: request.allowCrossSiteCredentials ? 'include' : undefined,
+  //   };
+  //   fetch(uri, init)
+  // }, shaka.net.NetworkingEngine.PluginPriority.PREFERRED, /* progressSupport= */ false);
+  //   const fetchOrig = shaka.net.HttpFetchPlugin.fetch_;
+
+  //   const request_ = async (uri, requestType, init, abortStatus, progressUpdated,
+  //     headersReceived, streamDataCallback) => {
+  //   const fetch = shaka.net.HttpFetchPlugin.fetch_;
+  //   // const ReadableStream = shaka.net.HttpFetchPlugin.ReadableStream_;
+  //   // let response;
+  //   // let arrayBuffer;
+  //   // let loaded = 0;
+  //   // let lastLoaded = 0;
+
+  //   // // Last time stamp when we got a progress event.
+  //   // let lastTime = Date.now();
+
+  //   try {
+  //     // The promise returned by fetch resolves as soon as the HTTP response
+  //     // headers are available. The download itself isn't done until the promise
+  //     // for retrieving the data (arrayBuffer, blob, etc) has resolved.
+  //     response = await fetch(uri, init);
+  //     // At this point in the process, we have the headers of the response, but
+  //     // not the body yet.
+  //     headersReceived(shaka.net.HttpFetchPlugin.headersToGenericObject_(
+  //         response.headers));
+  //     // Getting the reader in this way allows us to observe the process of
+  //     // downloading the body, instead of just waiting for an opaque promise to
+  //     // resolve.
+  //     // We first clone the response because calling getReader locks the body
+  //     // stream; if we didn't clone it here, we would be unable to get the
+  //     // response's arrayBuffer later.
+  //     const reader = response.clone().body.getReader();
+
+  //     const contentLengthRaw = response.headers.get('Content-Length');
+  //     const contentLength =
+  //         contentLengthRaw ? parseInt(contentLengthRaw, 10) : 0;
+
+  //     const start = (controller) => {
+  //       const push = async () => {
+  //         let readObj;
+  //         try {
+  //           readObj = await reader.read();
+  //         } catch (e) {
+  //           // If we abort the request, we'll get an error here.  Just ignore it
+  //           // since real errors will be reported when we read the buffer below.
+  //           shaka.log.v1('error reading from stream', e.message);
+  //           return;
+  //         }
+
+  //         if (!readObj.done) {
+  //           loaded += readObj.value.byteLength;
+  //           if (streamDataCallback) {
+  //             await streamDataCallback(readObj.value);
+  //           }
+  //         }
+
+  //         const currentTime = Date.now();
+  //         // If the time between last time and this time we got progress event
+  //         // is long enough, or if a whole segment is downloaded, call
+  //         // progressUpdated().
+  //         if (currentTime - lastTime > 100 || readObj.done) {
+  //           progressUpdated(currentTime - lastTime, loaded - lastLoaded,
+  //               contentLength - loaded);
+  //           lastLoaded = loaded;
+  //           lastTime = currentTime;
+  //         }
+
+  //         if (readObj.done) {
+  //           goog.asserts.assert(!readObj.value,
+  //               'readObj should be unset when "done" is true.');
+  //           controller.close();
+  //         } else {
+  //           controller.enqueue(readObj.value);
+  //           push();
+  //         }
+  //       };
+  //       push();
+  //     };
+  //     // Create a ReadableStream to use the reader. We don't need to use the
+  //     // actual stream for anything, though, as we are using the response's
+  //     // arrayBuffer method to get the body, so we don't store the
+  //     // ReadableStream.
+  //     new ReadableStream({start}); // eslint-disable-line no-new
+  //     arrayBuffer = await response.arrayBuffer();
+  //   } catch (error) {
+  //     if (abortStatus.canceled) {
+  //       throw new shaka.util.Error(
+  //           shaka.util.Error.Severity.RECOVERABLE,
+  //           shaka.util.Error.Category.NETWORK,
+  //           shaka.util.Error.Code.OPERATION_ABORTED,
+  //           uri, requestType);
+  //     } else if (abortStatus.timedOut) {
+  //       throw new shaka.util.Error(
+  //           shaka.util.Error.Severity.RECOVERABLE,
+  //           shaka.util.Error.Category.NETWORK,
+  //           shaka.util.Error.Code.TIMEOUT,
+  //           uri, requestType);
+  //     } else {
+  //       throw new shaka.util.Error(
+  //           shaka.util.Error.Severity.RECOVERABLE,
+  //           shaka.util.Error.Category.NETWORK,
+  //           shaka.util.Error.Code.HTTP_ERROR,
+  //           uri, error, requestType);
+  //     }
+  //   }
+
+  //   const headers = shaka.net.HttpFetchPlugin.headersToGenericObject_(
+  //       response.headers);
+
+  //   return shaka.net.HttpPluginUtils.makeResponse(
+  //       headers, arrayBuffer, response.status, uri, response.url, requestType);
+  // }
+
+  const proxyThroughClientScript = async (clientFrame, url, options) => {
+    return await new Promise((resolve) => {
+      const payload = { id: "123", url, options };
+      const receiveMessage = (event) => {
+        // console.log(event.data);
+        // const decoder = new TextDecoder("utf-8");
+        // const view = new DataView(event.data.res || event.data.data, 0, (event.data.res || event.data.data).byteLength);
+        // const string = decoder.decode(view);
+        if (event.data && event.data.buffer) {
+          const body = String.fromCharCode.apply(null, new Uint8Array(event.data.buffer));
+          // console.log(body);
+          resolve({
+            status: event.data.response.status,
+            headers: event.data.response.headers,
+            body: event.data.buffer
+          });
+        }
+      };
+
+      window.removeEventListener('message', receiveMessage, false);
+      window.addEventListener('message', receiveMessage, false);
+
+      clientFrame.contentWindow.postMessage({ type: 'PROXY_REQUEST', payload, origin: window.location.href }, new URL('https://www.youtube.com').origin);
+    });
+  }
+
+
   // We send the emyw-meta to the proxy server for processing
   player.getNetworkingEngine().registerRequestFilter((type, request) => {
     // RequestType = {
@@ -193,6 +361,34 @@ const initPlayer = async () => {
       // We can't add the cache-control header due to CORS. Consider clearing the Cache for sites that cause this cache poisoning
       // Another approach is to cache-bust by adding something to the path as below
       if (state.currentProvider === "DISNEYPLUS" && request.uris && request.uris.length > 0) request.uris[0] += `?vary=${generateDeviceId(6)}`;
+      if (state.currentProvider === "YOUTUBE") {
+        // console.log('getting a segment');
+        shaka.net.HttpFetchPlugin.request_ = async (uri, requestType, options, abortStatus, progressUpdated, headersReceived, streamDataCallback) => {
+          let lastTime = Date.now();
+          let range = "";
+          ({ Range: range } = request.headers);
+          range = (range.split('=') || ['', '0-1780'])[1];
+          uri += `&range=${range}`;
+          // perform the fetch through the content script in iframe
+          delete options.signal;
+          proxyRequest = { url: uri, options };
+          options.headers = shaka.net.HttpFetchPlugin.headersToGenericObject_(options.headers);
+          console.log(proxyRequest);
+
+          const clientFrame = document.getElementById('yt-proxy-frame');
+          proxiedRes = await proxyThroughClientScript(clientFrame, uri, options);
+          if (proxiedRes.headers.map) {
+            proxiedRes.headers = new Map(proxiedRes.headers.map(entry => {
+              return [entry[0], entry[1]];
+            }));
+          }
+          headersReceived(shaka.net.HttpFetchPlugin.headersToGenericObject_(proxiedRes.headers))
+          const currentTime = Date.now();
+          progressUpdated(currentTime - lastTime, 0, 0);
+          console.log(proxiedRes);
+          return shaka.net.HttpPluginUtils.makeResponse(proxiedRes.headers, proxiedRes.body, proxiedRes.status, uri, uri, requestType);
+        };
+      }
       // console.log('there was a segment request', request);
     } else if (type == shaka.net.NetworkingEngine.RequestType.LICENSE) {
       if (state.providers[state.currentProvider].drmSession) state.providers[state.currentProvider].drmSession.sessionId = request.sessionId;
@@ -217,7 +413,6 @@ const initPlayer = async () => {
       request.headers = Object.assign(request.headers, buildEMYWHeader(emywMeta));
     }
   });
-
 
   var pausedByBuffering = false;
 
@@ -284,7 +479,7 @@ const requestManifest = async (provider, videoId, regenerateManifest) => {
   const emywMeta = buildEMYWMeta(provider);
   emywMeta.videoId = videoId;
   emywMeta.includeFullManifestText = true;
-  emywMeta.forceRegenerate = true;
+  // emywMeta.forceRegenerate = true;
   if (provider === "NETFLIX") emywMeta.supportsClientProxy = true;
   // emywMeta.forceRegenerate = regenerateManifest;
   let manifestObject;
