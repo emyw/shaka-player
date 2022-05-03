@@ -26,7 +26,7 @@ For details on what's coming next, see our [development roadmap](roadmap.md).
 
 ## Platform and browser support matrix
 
-|Browser    |Windows   |Mac      |Linux    |Android  |iOS >= 12 |ChromeOS|Other|
+|Browser    |Windows   |Mac      |Linux    |Android  |iOS >= 13 |ChromeOS|Other|
 |:---------:|:--------:|:-------:|:-------:|:-------:|:--------:|:------:|:---:|
 |Chrome¹    |**Y**     |**Y**    |**Y**    |**Y**    |**Native**|**Y**   | -   |
 |Firefox¹   |**Y**     |**Y**    |**Y**    |untested⁵|**Native**| -      | -   |
@@ -41,7 +41,7 @@ For details on what's coming next, see our [development roadmap](roadmap.md).
 |Xbox One   | -        | -       | -       | -       | -        | -      |**Y**|
 
 NOTES:
- - ¹: On macOS, only Safari 12+ is supported.  On iOS, only iOS 12+ is
+ - ¹: On macOS, only Safari 13+ is supported.  On iOS, only iOS 13+ is
    supported.  Older versions will be rejected.
  - ²: The latest stable Chromecast firmware is tested. Both sender and receiver
    can be implemented with Shaka Player.
@@ -52,9 +52,9 @@ NOTES:
  - ⁶: These are expected to work, but are community-supported and untested by
    us.
      - Official support for LG WebOS TV:
-       https://github.com/google/shaka-player/issues/1330
+       https://github.com/shaka-project/shaka-player/issues/1330
 
-We support iOS 12+ through Apple's native HLS player.  We provide the same
+We support iOS 13+ through Apple's native HLS player.  We provide the same
 top-level API, but we just set the video's `src` element to the manifest/media.
 So we are dependent on the browser supporting the manifests.
 
@@ -65,7 +65,7 @@ features and similar APIs for native apps on iOS. This project uses its own
 media stack, which allows it to play content that would otherwise not be
 supported. This supports both DASH and HLS manifests.
 
-[Shaka Player Embedded]: https://github.com/google/shaka-player-embedded
+[Shaka Player Embedded]: https://github.com/shaka-project/shaka-player-embedded
 
 
 ## Manifest format support matrix
@@ -102,15 +102,17 @@ DASH features supported:
 DASH features **not** supported:
  - Xlink with actuate=onRequest
  - Manifests without any segment info:
-   https://github.com/google/shaka-player/issues/1088
+   https://github.com/shaka-project/shaka-player/issues/1088
  - Changing codecs during a presentation (unsupported by MSE)
  - Multiple trick mode tracks for the same resolution at varying framerates or
    bitrates
  - Timescales so large that timestamps cannot be represented as integers in
-   JavaScript (2^53): https://github.com/google/shaka-player/issues/1667
+   JavaScript (2^53): https://github.com/shaka-project/shaka-player/issues/1667
 
 
 ## HLS features
+
+**Only supported on browsers with SourceBuffer.mode=sequence support**
 
 HLS features supported:
  - VOD, Live, and Event types
@@ -122,13 +124,12 @@ HLS features supported:
  - WebVTT and TTML
  - CEA-608/708 captions
  - Encrypted content with PlayReady and Widevine
- - Encrypted content with FairPlay (Safari on macOS and iOS 12+ only)
+ - Encrypted content with FairPlay (Safari on macOS and iOS 13+ only)
+ - Raw AAC, MP3, etc (without an MP4 container)
 
 HLS features **not** supported:
- - Key rotation: https://github.com/google/shaka-player/issues/917
- - I-frame-only playlists: https://github.com/google/shaka-player/issues/742
- - Raw AAC, MP3, etc (without an MP4 container):
-   https://github.com/google/shaka-player/issues/2337
+ - Key rotation: https://github.com/shaka-project/shaka-player/issues/917
+ - I-frame-only playlists: https://github.com/shaka-project/shaka-player/issues/742
  - Low-latency streaming with blocking playlist reload
 
 [mux.js]: https://github.com/videojs/mux.js/releases
@@ -171,7 +172,9 @@ NOTES:
 |HLS       |**Y**     |**Y**    |**Y** ¹  | -        |
 
 NOTES:
- - ¹: We support FairPlay through Apple's native HLS player.
+ - ¹: By default, FairPlay is handled using Apple's native HLS player, when on
+   Safari. We do support FairPlay through MSE/EME, however. See the
+   `streaming.useNativeHlsOnSafari` configuration value.
 
 
 ## Media container and subtitle support

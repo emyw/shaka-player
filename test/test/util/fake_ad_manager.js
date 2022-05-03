@@ -4,15 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-goog.provide('shaka.test.FakeAdManager');
-
-goog.require('shaka.ads.AdManager');
-goog.require('shaka.ads.AdsStats');
-goog.require('shaka.util.FakeEvent');
-goog.require('shaka.util.FakeEventTarget');
-goog.requireType('shaka.test.FakeAd');
-
-
 /**
  * @implements {shaka.extern.IAdManager}
  * @final
@@ -85,7 +76,7 @@ shaka.test.FakeAdManager = class extends shaka.util.FakeEventTarget {
    */
   startAd(ad) {
     const event = new shaka.util.FakeEvent(shaka.ads.AdManager.AD_STARTED,
-        {'ad': ad});
+        (new Map()).set('ad', ad));
 
     this.dispatchEvent(event);
   }

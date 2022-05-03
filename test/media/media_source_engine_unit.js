@@ -4,19 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-
-goog.require('goog.asserts');
-goog.require('shaka.media.MediaSourceEngine');
-goog.require('shaka.media.Transmuxer');
-goog.require('shaka.test.FakeClosedCaptionParser');
-goog.require('shaka.test.FakeTextDisplayer');
-goog.require('shaka.test.FakeTransmuxer');
-goog.require('shaka.test.StatusPromise');
-goog.require('shaka.test.Util');
-goog.require('shaka.text.TextEngine');
-goog.require('shaka.util.Error');
-goog.require('shaka.util.ManifestParserUtils');
-
 /**
  * @typedef {{
  *   length: number,
@@ -62,10 +49,10 @@ describe('MediaSourceEngine', () => {
   const buffer2 = /** @type {!ArrayBuffer} */ (/** @type {?} */ (2));
   const buffer3 = /** @type {!ArrayBuffer} */ (/** @type {?} */ (3));
 
-  const fakeVideoStream = {mimeType: 'video/foo'};
-  const fakeAudioStream = {mimeType: 'audio/foo'};
-  const fakeTextStream = {mimeType: 'text/foo'};
-  const fakeTransportStream = {mimeType: 'tsMimetype'};
+  const fakeVideoStream = {mimeType: 'video/foo', drmInfos: []};
+  const fakeAudioStream = {mimeType: 'audio/foo', drmInfos: []};
+  const fakeTextStream = {mimeType: 'text/foo', drmInfos: []};
+  const fakeTransportStream = {mimeType: 'tsMimetype', drmInfos: []};
 
   let audioSourceBuffer;
   let videoSourceBuffer;
@@ -825,7 +812,8 @@ describe('MediaSourceEngine', () => {
       await mediaSourceEngine.setStreamProperties(ContentType.TEXT,
           /* timestampOffset= */ 10,
           /* appendWindowStart= */ 0,
-          /* appendWindowEnd= */ 20);
+          /* appendWindowEnd= */ 20,
+          /* sequenceMode= */ false);
       expect(mockTextEngine.setTimestampOffset).toHaveBeenCalledWith(10);
       expect(mockTextEngine.setAppendWindow).toHaveBeenCalledWith(0, 20);
     });
@@ -1120,14 +1108,14 @@ describe('MediaSourceEngine', () => {
     });
 
     it('destroys text engines', async () => {
-      mediaSourceEngine.reinitText('text/vtt');
+      mediaSourceEngine.reinitText('text/vtt', false);
 
       await mediaSourceEngine.destroy();
       expect(mockTextEngine).toBeTruthy();
       expect(mockTextEngine.destroy).toHaveBeenCalled();
     });
 
-    // Regression test for https://github.com/google/shaka-player/issues/984
+    // Regression test for https://github.com/shaka-project/shaka-player/issues/984
     it('destroys TextDisplayer on destroy', async () => {
       await mediaSourceEngine.destroy();
       expect(mockTextDisplayer.destroySpy).toHaveBeenCalled();

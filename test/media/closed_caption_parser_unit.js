@@ -1,5 +1,8 @@
-goog.require('shaka.media.ClosedCaptionParser');
-goog.require('shaka.test.Util');
+/*! @license
+ * Shaka Player
+ * Copyright 2016 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
 
 describe('ClosedCaptionParser', () => {
   it('can handle empty caption packets', async () => {
@@ -12,4 +15,3 @@ describe('ClosedCaptionParser', () => {
     parser.parseFrom(videoSegment);
   });
 });
-

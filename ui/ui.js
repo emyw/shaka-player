@@ -207,6 +207,8 @@ shaka.ui.Overlay = class {
         'completionPercent',
       ],
       contextMenuElements: [
+        'loop',
+        'picture_in_picture',
         'statistics',
       ],
       playbackRates: [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2],
@@ -231,6 +233,7 @@ shaka.ui.Overlay = class {
       trackLabelFormat: shaka.ui.Overlay.TrackLabelFormat.LANGUAGE,
       fadeDelay: 0,
       doubleClickForFullscreen: true,
+      singleClickForPlayAndPause: true,
       enableKeyboardPlaybackControls: true,
       enableFullscreenOnRotation: true,
       forceLandscapeOnFullscreen: true,
@@ -445,14 +448,6 @@ shaka.ui.Overlay.TrackLabelFormat = {
   'LABEL': 3,
 };
 
-/*
- * "shaka.ui.TrackLabelFormat" is deprecated and will be removed in v4.
- *
- * @deprecated
- * @enum {number}
- */
-shaka.ui.TrackLabelFormat = shaka.ui.Overlay.TrackLabelFormat;
-
 /**
  * Describes the possible reasons that the UI might fail to load.
  *
@@ -463,15 +458,6 @@ shaka.ui.Overlay.FailReasonCode = {
   'NO_BROWSER_SUPPORT': 0,
   'PLAYER_FAILED_TO_LOAD': 1,
 };
-
-
-/**
- * "shaka.ui.FailReasonCode" is deprecated and will be removed in v4.
- *
- * @deprecated
- * @enum {number}
- */
-shaka.ui.FailReasonCode = shaka.ui.Overlay.FailReasonCode;
 
 
 if (document.readyState == 'complete') {

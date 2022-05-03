@@ -7,6 +7,7 @@
 
 goog.provide('shaka.ui.PipButton');
 
+goog.require('shaka.ui.ContextMenu');
 goog.require('shaka.ui.Controls');
 goog.require('shaka.ui.Element');
 goog.require('shaka.ui.Enums');
@@ -131,9 +132,8 @@ shaka.ui.PipButton = class extends shaka.ui.Element {
         await document.exitPictureInPicture();
       }
     } catch (error) {
-      this.controls.dispatchEvent(new shaka.util.FakeEvent('error', {
-        detail: error,
-      }));
+      this.controls.dispatchEvent(new shaka.util.FakeEvent(
+          'error', (new Map()).set('detail', error)));
     }
   }
 
@@ -238,4 +238,7 @@ shaka.ui.OverflowMenu.registerElement(
     'picture_in_picture', new shaka.ui.PipButton.Factory());
 
 shaka.ui.Controls.registerElement(
+    'picture_in_picture', new shaka.ui.PipButton.Factory());
+
+shaka.ui.ContextMenu.registerElement(
     'picture_in_picture', new shaka.ui.PipButton.Factory());

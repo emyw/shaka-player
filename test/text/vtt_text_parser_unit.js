@@ -4,15 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-goog.require('shaka.log');
-goog.require('shaka.test.Util');
-goog.require('shaka.text.Cue');
-goog.require('shaka.text.CueRegion');
-goog.require('shaka.text.VttTextParser');
-goog.require('shaka.util.BufferUtils');
-goog.require('shaka.util.Error');
-goog.require('shaka.util.StringUtils');
-
 describe('VttTextParser', () => {
   const Cue = shaka.text.Cue;
   const CueRegion = shaka.text.CueRegion;
@@ -34,13 +25,13 @@ describe('VttTextParser', () => {
   it('supports no cues', () => {
     verifyHelper([],
         'WEBVTT',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports initial comments', () => {
     verifyHelper([],
         'WEBVTT - Comments',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports comment blocks', () => {
@@ -48,7 +39,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         'NOTE\n' +
         'This is a comment block',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports comment blocks with inital comment', () => {
@@ -56,7 +47,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         'NOTE - A header comment\n' +
         'This is a comment block',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('handles a blank line at the end of the file', () => {
@@ -67,7 +58,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000\n' +
         'Test\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('handles no blank line at the end of the file', () => {
@@ -78,8 +69,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000\n' +
         'Test\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0,
-        });
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('handles no newline after the final text payload', () => {
@@ -90,7 +80,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000\n' +
         'Test',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports cues with no settings', () => {
@@ -106,7 +96,7 @@ describe('VttTextParser', () => {
         '2\n' +
         '00:00:40.000 --> 00:00:50.000\n' +
         'Test2',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports cues with no ID', () => {
@@ -120,7 +110,7 @@ describe('VttTextParser', () => {
         'Test\n\n' +
         '00:00:40.000 --> 00:00:50.000\n' +
         'Test2',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports comments within cues', () => {
@@ -136,7 +126,7 @@ describe('VttTextParser', () => {
         'This is a note\n\n' +
         '00:00:40.000 --> 00:00:50.000\n' +
         'Test2',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports non-integer timecodes', () => {
@@ -147,7 +137,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.100 --> 00:00:40.505\n' +
         'Test',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports large timecodes', () => {
@@ -158,50 +148,50 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 30:00:00.000\n' +
         'Test',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('requires header', () => {
     errorHelper(shaka.util.Error.Code.INVALID_TEXT_HEADER,
         '',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
     errorHelper(shaka.util.Error.Code.INVALID_TEXT_HEADER,
         '00:00:00.000 --> 00:00:00.020\nTest',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('rejects invalid time values', () => {
     errorHelper(shaka.util.Error.Code.INVALID_TEXT_CUE,
         'WEBVTT\n\n00.020    --> 0:00.040\nTest',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0},
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0},
         anyString);
     errorHelper(shaka.util.Error.Code.INVALID_TEXT_CUE,
         'WEBVTT\n\n0:00.020  --> 0:00.040\nTest',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0},
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0},
         anyString);
     errorHelper(shaka.util.Error.Code.INVALID_TEXT_CUE,
         'WEBVTT\n\n00:00.20  --> 0:00.040\nTest',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0},
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0},
         anyString);
     errorHelper(shaka.util.Error.Code.INVALID_TEXT_CUE,
         'WEBVTT\n\n00:100.20 --> 0:00.040\nTest',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0},
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0},
         anyString);
     errorHelper(shaka.util.Error.Code.INVALID_TEXT_CUE,
         'WEBVTT\n\n00:00.020 --> 0:00.040\nTest',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0},
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0},
         anyString);
     errorHelper(shaka.util.Error.Code.INVALID_TEXT_CUE,
         'WEBVTT\n\n00:00:00:00.020 --> 0:00.040\nTest',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0},
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0},
         anyString);
     errorHelper(shaka.util.Error.Code.INVALID_TEXT_CUE,
         'WEBVTT\n\n00:61.020 --> 0:00.040\nTest',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0},
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0},
         anyString);
     errorHelper(shaka.util.Error.Code.INVALID_TEXT_CUE,
         'WEBVTT\n\n61:00.020 --> 0:00.040\nTest',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0},
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0},
         anyString);
   });
 
@@ -226,7 +216,7 @@ describe('VttTextParser', () => {
         'Test\n\n' +
         '00:00:40.000 --> 00:00:50.000 vertical:lr\n' +
         'Test2',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports line setting', () => {
@@ -258,7 +248,7 @@ describe('VttTextParser', () => {
         'Test3\n\n' +
         '00:00:55.000 --> 00:01:05.000 line:12.3%\n' +
         'Test4\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports line setting with optional part', () => {
@@ -280,7 +270,7 @@ describe('VttTextParser', () => {
         'Test\n\n' +
         '00:00:40.000 --> 00:00:50.000 line:-1,center\n' +
         'Test2',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports position setting', () => {
@@ -294,7 +284,7 @@ describe('VttTextParser', () => {
         'Test\n\n' +
         '00:00:25.000 --> 00:00:45.000 position:12.3%\n' +
         'Test2\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports position setting with optional part', () => {
@@ -314,7 +304,7 @@ describe('VttTextParser', () => {
         'Test\n\n' +
         '00:00:20.000 --> 00:00:40.000 position:45%,start\n' +
         'Test2',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports size setting', () => {
@@ -328,7 +318,7 @@ describe('VttTextParser', () => {
         'Test\n\n' +
         '00:00:25.000 --> 00:00:45.000 size:12.3%\n' +
         'Test2\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports align setting', () => {
@@ -339,7 +329,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000 align:center\n' +
         'Test',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports multiple settings', () => {
@@ -357,7 +347,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000 align:center size:56% vertical:lr\n' +
         'Test',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports timestamps with one-digit hour at start time', () => {
@@ -375,7 +365,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '0:00:20.000 --> 00:00:40.000 align:center size:56% vertical:lr\n' +
         'Test',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports timestamps with one-digit hour at end time', () => {
@@ -393,7 +383,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 0:00:40.000 align:center size:56% vertical:lr\n' +
         'Test',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports stamps with one-digit hours at start & end time', () => {
@@ -411,15 +401,15 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '0:00:20.000 --> 0:00:40.000 align:center size:56% vertical:lr\n' +
         'Test',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
-  it('uses time offset from periodStart, not segmentStart', () => {
+  it('uses time offset from vttOffset, not periodStart or segmentStart', () => {
     verifyHelper(
         [
           {
-            startTime: 70,
-            endTime: 80,
+            startTime: 50,
+            endTime: 60,
             payload: 'Test',
             textAlign: 'center',
             size: 56,
@@ -429,9 +419,8 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '0:00:10.000 --> 0:00:20.000 align:center size:56% vertical:lr\n' +
         'Test',
-        {periodStart: 60, segmentStart: 80, segmentEnd: 100});
+        {periodStart: 60, segmentStart: 80, segmentEnd: 100, vttOffset: 40});
   });
-
 
   it('parses VTTRegions', () => {
     verifyHelper(
@@ -460,7 +449,7 @@ describe('VttTextParser', () => {
         'viewportanchor=10%,90% scroll=up\n\n' +
         '0:00:20.000 --> 0:00:40.000 region:reg1\n' +
         'Test',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('ignores and logs invalid settings', () => {
@@ -473,7 +462,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000 vertical:es\n' +
         'Test\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
 
     verifyHelper(
         [
@@ -482,7 +471,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000 vertical:\n' +
         'Test\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
 
     verifyHelper(
         [
@@ -491,7 +480,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000 vertical\n' +
         'Test\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
 
     verifyHelper(
         [
@@ -500,7 +489,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000 line:-3%\n' +
         'Test\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
 
     verifyHelper(
         [
@@ -509,7 +498,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000 line:45%%\n' +
         'Test\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
 
     verifyHelper(
         [
@@ -518,7 +507,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000 align:10\n' +
         'Test\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
 
     verifyHelper(
         [
@@ -527,7 +516,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.000 --> 00:00:40.000 align:foo\n' +
         'Test\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
 
     expect(logWarningSpy).toHaveBeenCalledTimes(7);
   });
@@ -546,7 +535,7 @@ describe('VttTextParser', () => {
         'Test\n\n' +
         '00:00:40.000 --> 00:00:50.000 line:-1\n' +
         'Test2',
-        {periodStart: 0, segmentStart: 25, segmentEnd: 65});
+        {periodStart: 0, segmentStart: 25, segmentEnd: 65, vttOffset: 0});
   });
 
   it('handles timestamp rollover with X-TIMESTAMP-MAP header', () => {
@@ -562,7 +551,7 @@ describe('VttTextParser', () => {
         'Test',
         // Non-null segmentStart takes precedence over X-TIMESTAMP-MAP.
         // This protects us from rollover in the MPEGTS field.
-        {periodStart: 0, segmentStart: 95440, segmentEnd: 95550});
+        {periodStart: 0, segmentStart: 95440, segmentEnd: 95550, vttOffset: 0});
 
     verifyHelper(
         [
@@ -575,7 +564,7 @@ describe('VttTextParser', () => {
         'X-TIMESTAMP-MAP=MPEGTS:9745408,LOCAL:00:00:00.000\n\n' +
         '00:00:00.000 --> 00:00:02.000 line:0\n' +
         'Test2',
-        {periodStart: 0, segmentStart: 95550, segmentEnd: 95560});
+        {periodStart: 0, segmentStart: 95550, segmentEnd: 95560, vttOffset: 0});
   });
 
   it('supports global style blocks', () => {
@@ -606,7 +595,7 @@ describe('VttTextParser', () => {
         'Test\n\n' +
         '00:00:40.000 --> 00:00:50.000\n' +
         'Test2',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports global style blocks without blank lines', () => {
@@ -634,7 +623,7 @@ describe('VttTextParser', () => {
         'Test\n\n' +
         '00:00:40.000 --> 00:00:50.000\n' +
         'Test2',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports payload stylized', () => {
@@ -775,7 +764,7 @@ describe('VttTextParser', () => {
         '<b>Test <i>7</i></b>\n\n' +
         '00:01:30.000 --> 00:01:40.000\n' +
         '<b>Test<i>8</b>',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports specific style blocks', () => {
@@ -803,7 +792,7 @@ describe('VttTextParser', () => {
         '<b>Test</b>\n\n' +
         '00:00:40.000 --> 00:00:50.000\n' +
         'Test2',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports only two digits in the timestamp', () => {
@@ -814,7 +803,7 @@ describe('VttTextParser', () => {
         'WEBVTT\n\n' +
         '00:00:20.00 --> 00:00:40.00\n' +
         'Test',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports class with default color', () => {
@@ -956,7 +945,7 @@ describe('VttTextParser', () => {
         '<c.lime>forward slash 1/2 in text</c>\n\n' +
         '00:01:50.000 --> 00:02:00.000\n' +
         '<c.lime>less or more < > in text</c>',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   it('supports default color overriding', () => {
@@ -982,7 +971,7 @@ describe('VttTextParser', () => {
         '::cue(bg_blue) { font-size: 10px; background-color: #FF0 }\n\n' +
         '00:00:10.000 --> 00:00:20.000\n' +
         '<c.red.bg_blue>Example 1</c>\n\n',
-        {periodStart: 0, segmentStart: 0, segmentEnd: 0});
+        {periodStart: 0, segmentStart: 0, segmentEnd: 0, vttOffset: 0});
   });
 
   /**
