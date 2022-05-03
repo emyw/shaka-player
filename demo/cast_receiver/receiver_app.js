@@ -148,11 +148,11 @@ class ShakaReceiverApp {
  */
 ShakaReceiverApp.IDLE_TIMEOUT_MINUTES_ = 5;
 
-document.addEventListener('shaka-ui-loaded', () => {
-  // Instantiate ShakaReceiverApp.
-  const receiver = new ShakaReceiverApp();
-  // Attach it to window so that it can be seen in a debugger.
-  window['receiver'] = receiver;
-  // Initialize the app.
-  receiver.init();
-});
+// document.addEventListener('shaka-ui-loaded', () => {
+//   // Instantiate ShakaReceiverApp.
+//   const receiver = new ShakaReceiverApp();
+//   // Attach it to window so that it can be seen in a debugger.
+//   window['receiver'] = receiver;
+//   // Initialize the app.
+//   receiver.init();
+// });

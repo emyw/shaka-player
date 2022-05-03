@@ -1785,13 +1785,13 @@ shakaDemo.Main.initWrapper = async (initFn) => {
     console.error(error);
   }
 };
-document.addEventListener('shaka-ui-loaded', () => {
-  shakaDemo.Main.initWrapper(() => shakaDemoMain.init());
-});
-document.addEventListener('shaka-ui-load-failed', (event) => {
-  shakaDemo.Main.initWrapper(() => {
-    const reasonCode = /** @type {!shaka.ui.Overlay.FailReasonCode} */ (
-      event['detail']['reasonCode']);
-    shakaDemoMain.initFailed(reasonCode);
-  });
-});
+// document.addEventListener('shaka-ui-loaded', () => {
+//   shakaDemo.Main.initWrapper(() => shakaDemoMain.init());
+// });
+// document.addEventListener('shaka-ui-load-failed', (event) => {
+//   shakaDemo.Main.initWrapper(() => {
+//     const reasonCode = /** @type {!shaka.ui.Overlay.FailReasonCode} */ (
+//       event['detail']['reasonCode']);
+//     shakaDemoMain.initFailed(reasonCode);
+//   });
+// });
