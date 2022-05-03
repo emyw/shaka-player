@@ -164,7 +164,7 @@ shakaDemo.Main = class {
       case shaka.ui.Overlay.FailReasonCode.NO_BROWSER_SUPPORT:
         message = this.getLocalizedString(
             shakaDemo.MessageIds.FAILURE_NO_BROWSER_SUPPORT);
-        href = 'https://github.com/google/shaka-player#' +
+        href = 'https://github.com/shaka-project/shaka-player#' +
                 'platform-and-browser-support-matrix';
         break;
       case shaka.ui.Overlay.FailReasonCode.PLAYER_FAILED_TO_LOAD:
@@ -289,7 +289,7 @@ shakaDemo.Main = class {
 
     // Navigate to the github issue opening interface, with the
     // partially-filled template as a preset body.
-    let url = 'https://github.com/google/shaka-player/issues/new?';
+    let url = 'https://github.com/shaka-project/shaka-player/issues/new?';
     url += 'body=' + encodeURIComponent(text);
     // Open in another tab.
     window.open(url, '_blank');
@@ -582,7 +582,10 @@ shakaDemo.Main = class {
         };
         asset.storedProgress = 0;
         this.dispatchEventWithName_('shaka-main-offline-progress');
+        const start = Date.now();
         const stored = await storage.store(asset.manifestUri, metadata).promise;
+        const end = Date.now();
+        console.log('Download time:', end - start);
         asset.storedContent = stored;
       } catch (error) {
         this.onError_(/** @type {!shaka.util.Error} */ (error));
@@ -725,6 +728,9 @@ shakaDemo.Main = class {
     }
     if (asset.features.includes(shakaAssets.Feature.MP2TS)) {
       mimeTypes.push('video/mp2t');
+    }
+    if (asset.features.includes(shakaAssets.Feature.CONTAINERLESS)) {
+      mimeTypes.push('audio/aac');
     }
     const hasSupportedMimeType = mimeTypes.some((type) => {
       return this.support_.media[type];
@@ -941,9 +947,6 @@ shakaDemo.Main = class {
     if ('noadaptation' in params) {
       this.configure('abr.enabled', false);
     }
-    if ('jumpLargeGaps' in params) {
-      this.configure('streaming.jumpLargeGaps', true);
-    }
 
     // Add compiled/uncompiled links.
     this.makeVersionLinks_();
@@ -1123,6 +1126,9 @@ shakaDemo.Main = class {
 
     if (document.fullscreenElement) {
       document.exitFullscreen();
+    }
+    if (this.video_.webkitDisplayingFullscreen) {
+      this.video_.webkitExitFullscreen();
     }
     if (document.pictureInPictureElement) {
       document.exitPictureInPicture();
@@ -1350,9 +1356,6 @@ shakaDemo.Main = class {
     }
     if (!this.getCurrentConfigValue('abr.enabled')) {
       params.push('noadaptation');
-    }
-    if (this.getCurrentConfigValue('streaming.jumpLargeGaps')) {
-      params.push('jumpLargeGaps');
     }
     params.push('uilang=' + this.getUILocale());
 
@@ -1608,7 +1611,7 @@ shakaDemo.Main = class {
 
   /**
    * Sets the "version-string" divs to a version string.
-   * For example, "v2.5.4-master (uncompiled)".
+   * For example, "v2.5.4-main (uncompiled)".
    * @private
    */
   setUpVersionStrings_() {

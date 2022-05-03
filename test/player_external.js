@@ -4,15 +4,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-goog.require('ShakaDemoAssetInfo');
-goog.require('shaka.test.Loader');
-goog.require('shaka.test.UiUtils');
-goog.require('shaka.test.Util');
-goog.require('shaka.test.Waiter');
-goog.require('shaka.util.EventManager');
-goog.requireType('shaka.Player');
-goog.requireType('shaka.net.NetworkingEngine.RequestType');
-
 describe('Player', () => {
   const Util = shaka.test.Util;
   const Feature = shakaAssets.Feature;
@@ -48,6 +39,7 @@ describe('Player', () => {
     // Grab event manager from the uncompiled library:
     eventManager = new shaka.util.EventManager();
     waiter = new shaka.test.Waiter(eventManager);
+    waiter.setPlayer(player);
 
     onErrorSpy = jasmine.createSpy('onError');
     onErrorSpy.and.callFake((event) => fail(event.detail));
@@ -114,12 +106,6 @@ describe('Player', () => {
         // Make sure that live streams are synced against a good clock.
         player.configure('manifest.dash.clockSyncUri',
             'https://shaka-player-demo.appspot.com/time.txt');
-
-        // Make sure we don't get stuck on gaps that only appear in some
-        // browsers (Safari, Firefox).
-        // TODO(https://github.com/google/shaka-player/issues/1702):
-        // Is this necessary because of a bug in Shaka Player?
-        player.configure('streaming.jumpLargeGaps', true);
 
         // Add asset-specific configuration.
         player.configure(asset.getConfiguration());

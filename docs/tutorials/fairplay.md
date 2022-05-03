@@ -1,40 +1,25 @@
 # FairPlay Support
 
-When using native `src=` playback, we support using FairPlay on Safari.
+We support FairPlay with EME on compatible environments or native `src=`.
 Adding FairPlay support involves a bit more work than other key systems.
-
 
 ## Server certificate
 
-All FairPlay content requires setting a server certificate.  This is set in the
-Player configuration:
+All FairPlay content requires setting a server certificate. You can either
+provide it directly or set a serverCertificateUri for Shaka to fetch it for
+you.
 
 ```js
 const req = await fetch('https://example.com/cert.der');
 const cert = await req.arrayBuffer();
 
-player.configure('drm.advanced.com\\.apple\\.fps\\.1_0.serverCertificate',
+player.configure('drm.advanced.com\\.apple\\.fps\\.serverCertificate',
                  new Uint8Array(cert));
 ```
 
-
-## Content ID
-
-Some FairPlay content use custom signaling for the content ID.  The content ID
-is used by the browser to generate the license request.  If you don't use the
-default content ID derivation, you need to specify a custom init data transform:
-
 ```js
-player.configure('drm.initDataTransform', (initData, initDataType) => {
-  if (initDataType != 'skd')
-    return initData;
-
-  // 'initData' is a buffer containing an 'skd://' URL as a UTF-8 string.
-  const skdUri = shaka.util.StringUtils.fromBytesAutoDetect(initData);
-  const contentId = getMyContentId(sdkUri);
-  const cert = player.drmInfo().serverCertificate;
-  return shaka.util.FairPlayUtils.initDataTransform(initData, contentId, cert);
-});
+player.configure('drm.advanced.com\\.apple\\.fps\\.serverCertificateUri',
+                 'https://example.com/cert.der');
 ```
 
 ## License wrapping
