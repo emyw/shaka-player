@@ -1194,7 +1194,7 @@ shaka.ui.Controls = class extends shaka.util.FakeEventTarget {
       // The controls are hidden, so show them.
       this.onMouseMove_(event);
       // Stop this event from becoming a click event.
-      event.preventDefault();
+      // event.preventDefault();
     }
   }
 
