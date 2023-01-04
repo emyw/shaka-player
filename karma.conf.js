@@ -160,10 +160,6 @@ module.exports = (config) => {
       'node_modules/es6-promise-polyfill/promise.js',
       //   Babel polyfill, required for async/await
       'node_modules/@babel/polyfill/dist/polyfill.js',
-      //   TextDecoder polyfill, required for TextDecoder/TextEncoder on IE and
-      //   legacy Edge
-      //   eslint-disable-next-line max-len
-      'node_modules/fastestsmallesttextencoderdecoder/EncoderDecoderTogether.min.js',
 
       // muxjs module next
       'node_modules/mux.js/dist/mux.min.js',
@@ -306,13 +302,6 @@ module.exports = (config) => {
     // Force failure when running empty test-suites.
     failOnEmptyTestSuite: true,
 
-    coverageReporter: {
-      includeAllSources: true,
-      reporters: [
-        {type: 'text'},
-      ],
-    },
-
     specReporter: {
       suppressSkipped: true,
       showBrowser: true,
@@ -363,6 +352,8 @@ module.exports = (config) => {
     // If testing custom assets, we don't serve other unit or integration tests.
     // External asset tests are the basis for custom asset testing, so this file
     // is automatically included.
+    clientArgs.testFiles.push('demo/common/asset.js');
+    clientArgs.testFiles.push('demo/common/assets.js');
     clientArgs.testFiles.push('test/player_external.js');
   } else {
     // In a normal test run, we serve unit tests.
@@ -374,6 +365,8 @@ module.exports = (config) => {
     }
     if (settings.external) {
       // If --external is present, we serve external asset tests.
+      clientArgs.testFiles.push('demo/common/asset.js');
+      clientArgs.testFiles.push('demo/common/assets.js');
       clientArgs.testFiles.push('test/**/*_external.js');
     }
   }
@@ -401,9 +394,12 @@ module.exports = (config) => {
 
     config.set({
       coverageReporter: {
+        includeAllSources: true,
         reporters: [
           {type: 'html', dir: 'coverage'},
           {type: 'cobertura', dir: 'coverage', file: 'coverage.xml'},
+          {type: 'json-summary', dir: 'coverage', file: 'coverage.json'},
+          {type: 'json', dir: 'coverage', file: 'coverage-details.json'},
         ],
       },
     });

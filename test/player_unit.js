@@ -6,6 +6,7 @@
 
 describe('Player', () => {
   const ContentType = shaka.util.ManifestParserUtils.ContentType;
+  const StreamUtils = shaka.util.StreamUtils;
   const Util = shaka.test.Util;
 
   const originalLogError = shaka.log.error;
@@ -29,6 +30,8 @@ describe('Player', () => {
   let player;
   /** @type {!shaka.test.FakeAbrManager} */
   let abrManager;
+  /** @type {function(!shaka.util.Error)} */
+  let onErrorCallback;
 
   /** @type {!shaka.test.FakeNetworkingEngine} */
   let networkingEngine;
@@ -40,6 +43,8 @@ describe('Player', () => {
   let playhead;
   /** @type {!shaka.test.FakeTextDisplayer} */
   let textDisplayer;
+  /** @type {shaka.extern.BufferedInfo} */
+  let bufferedInfo;
 
   let mediaSourceEngine;
 
@@ -101,6 +106,13 @@ describe('Player', () => {
     abrManager = new shaka.test.FakeAbrManager();
     textDisplayer = createTextDisplayer();
 
+    bufferedInfo = {
+      total: [],
+      audio: [],
+      video: [{start: 12, end: 26}],
+      text: [],
+    };
+
     function dependencyInjector(player) {
       // Create a networking engine that always returns an empty buffer.
       networkingEngine = new shaka.test.FakeNetworkingEngine();
@@ -111,6 +123,7 @@ describe('Player', () => {
       streamingEngine = new shaka.test.FakeStreamingEngine();
       mediaSourceEngine = {
         init: jasmine.createSpy('init').and.returnValue(Promise.resolve()),
+        configure: jasmine.createSpy('configure'),
         open: jasmine.createSpy('open').and.returnValue(Promise.resolve()),
         destroy:
             jasmine.createSpy('destroy').and.returnValue(Promise.resolve()),
@@ -118,13 +131,25 @@ describe('Player', () => {
         getUseEmbeddedText: jasmine.createSpy('getUseEmbeddedText'),
         setSegmentRelativeVttTiming:
             jasmine.createSpy('setSegmentRelativeVttTiming'),
+        updateLcevcDil:
+            jasmine.createSpy('updateLcevcDil'),
         getTextDisplayer: () => textDisplayer,
+        getBufferedInfo: () => bufferedInfo,
         ended: jasmine.createSpy('ended').and.returnValue(false),
       };
 
-      player.createDrmEngine = () => drmEngine;
+      player.createDrmEngine = ({onError}) => {
+        onErrorCallback = onError;
+        return drmEngine;
+      };
       player.createNetworkingEngine = () => networkingEngine;
-      player.createPlayhead = () => playhead;
+      player.createPlayhead = (startTime) => {
+        const callableSetStartTime =
+            shaka.test.Util.spyFunc(playhead.setStartTime);
+        callableSetStartTime(startTime);
+        playhead.setStartTime.calls.reset();
+        return playhead;
+      };
       player.createMediaSourceEngine = () => mediaSourceEngine;
       player.createStreamingEngine = () => streamingEngine;
     }
@@ -156,6 +181,7 @@ describe('Player', () => {
       window.MediaSource.isTypeSupported = originalIsTypeSupported;
       shaka.media.ManifestParser.unregisterParserByMime(fakeMimeType);
       navigator.mediaCapabilities.decodingInfo = originalDecodingInfo;
+      onError.calls.reset();
     }
   });
 
@@ -314,6 +340,187 @@ describe('Player', () => {
       });
     });
 
+    describe('onError and tryToRecoverFromError', () => {
+      const httpError = new shaka.util.Error(
+          shaka.util.Error.Severity.RECOVERABLE,
+          shaka.util.Error.Category.NETWORK,
+          shaka.util.Error.Code.HTTP_ERROR);
+      const badHttpStatusError = new shaka.util.Error(
+          shaka.util.Error.Severity.RECOVERABLE,
+          shaka.util.Error.Category.NETWORK,
+          shaka.util.Error.Code.BAD_HTTP_STATUS);
+      const timeoutError = new shaka.util.Error(
+          shaka.util.Error.Severity.RECOVERABLE,
+          shaka.util.Error.Category.NETWORK,
+          shaka.util.Error.Code.TIMEOUT);
+      const operationAbortedError = new shaka.util.Error(
+          shaka.util.Error.Severity.RECOVERABLE,
+          shaka.util.Error.Category.NETWORK,
+          shaka.util.Error.Code.OPERATION_ABORTED);
+      /** @type {?jasmine.Spy} */
+      let dispatchEventSpy;
+
+      beforeEach(async () => {
+        manifest = shaka.test.ManifestGenerator.generate((manifest) => {
+          manifest.addVariant(11, (variant) => {
+            variant.addAudio(2);
+            variant.addVideo(3);
+          });
+          manifest.addVariant(12, (variant) => {
+            variant.addAudio(4);
+            variant.addVideo(5);
+          });
+        });
+        await player.load(fakeManifestUri, 0, fakeMimeType);
+        dispatchEventSpy = spyOn(player, 'dispatchEvent').and.returnValue(true);
+      });
+
+      afterEach(() => {
+        dispatchEventSpy.calls.reset();
+      });
+
+      it('does not handle non recoverable network error', () => {
+        onErrorCallback(operationAbortedError);
+        expect(operationAbortedError.handled).toBeFalsy();
+        expect(player.dispatchEvent).toHaveBeenCalled();
+      });
+
+      describe('when config.streaming.maxDisabledTime is 0', () => {
+        it('does not handle NETWORK HTTP_ERROR', () => {
+          player.configure({streaming: {maxDisabledTime: 0}});
+          httpError.handled = false;
+          onErrorCallback(httpError);
+          expect(httpError.handled).toBeFalsy();
+          expect(player.dispatchEvent).toHaveBeenCalled();
+        });
+      });
+
+      describe('when config.streaming.maxDisabledTime is 30', () => {
+        /** @type {number} */
+        const maxDisabledTime = 30;
+        /** @type {number} */
+        const currentTime = 123;
+        const chosenVariant = {
+          id: 1,
+          language: 'es',
+          disabledUntilTime: 0,
+          primary: false,
+          bandwidth: 2100,
+          allowedByApplication: true,
+          allowedByKeySystem: true,
+          decodingInfos: [],
+        };
+        /** @type {?jasmine.Spy} */
+        let applyRestrictionsSpy;
+        /** @type {?jasmine.Spy} */
+        let chooseVariantSpy;
+        /** @type {?jasmine.Spy} */
+        let getBufferedInfoSpy;
+        /** @type {?jasmine.Spy} */
+        let switchVariantSpy;
+
+        describe('and there is new variant', () => {
+          const oldDateNow = Date.now;
+          beforeEach(() => {
+            Date.now = () => currentTime * 1000;
+            chooseVariantSpy = spyOn(player, 'chooseVariant_')
+                .and.returnValue(chosenVariant);
+            getBufferedInfoSpy = spyOn(player, 'getBufferedInfo')
+                .and.returnValue(bufferedInfo);
+            switchVariantSpy = spyOn(player, 'switchVariant_');
+            applyRestrictionsSpy = spyOn(StreamUtils, 'applyRestrictions');
+            httpError.handled = false;
+            dispatchEventSpy.calls.reset();
+            player.configure({streaming: {maxDisabledTime}});
+            player.setMaxHardwareResolution(123, 456);
+          });
+
+          afterEach(() => {
+            Date.now = oldDateNow;
+            chooseVariantSpy.calls.reset();
+            getBufferedInfoSpy.calls.reset();
+            switchVariantSpy.calls.reset();
+            applyRestrictionsSpy.calls.reset();
+          });
+
+          it('handles HTTP_ERROR', () => {
+            onErrorCallback(httpError);
+            expect(httpError.handled).toBeTruthy();
+          });
+
+          it('handles BAD_HTTP_STATUS', () => {
+            onErrorCallback(badHttpStatusError);
+            expect(badHttpStatusError.handled).toBeTruthy();
+          });
+
+          it('handles TIMEOUT', () => {
+            onErrorCallback(timeoutError);
+            expect(timeoutError.handled).toBeTruthy();
+          });
+
+          it('does not dispatch any error', () => {
+            onErrorCallback(httpError);
+            expect(dispatchEventSpy).not.toHaveBeenCalled();
+          });
+
+          it('disables the current variant and applies restrictions', () => {
+            onErrorCallback(httpError);
+
+            const foundDisabledVariant =
+                manifest.variants.some(({disabledUntilTime}) =>
+                  disabledUntilTime == currentTime + maxDisabledTime);
+            expect(foundDisabledVariant).toBeTruthy();
+            expect(applyRestrictionsSpy).toHaveBeenCalledWith(
+                manifest.variants,
+                player.getConfiguration().restrictions,
+                {width: 123, height: 456});
+          });
+
+          it('switches the variant', () => {
+            onErrorCallback(httpError);
+
+            expect(chooseVariantSpy).toHaveBeenCalled();
+            expect(getBufferedInfoSpy).toHaveBeenCalled();
+            expect(switchVariantSpy)
+                .toHaveBeenCalledWith(chosenVariant, false, true, 14);
+          });
+
+          describe('but browser is truly offline', () => {
+            /** @type {!Object} */
+            let navigatorOnLineDescriptor;
+
+            // eslint-disable-next-line no-restricted-syntax
+            const navigatorPrototype = Navigator.prototype;
+
+            beforeAll(() => {
+              navigatorOnLineDescriptor =
+                /** @type {!Object} */(Object.getOwnPropertyDescriptor(
+                    navigatorPrototype, 'onLine'));
+            });
+
+            beforeEach(() => {
+              // Redefine the property, replacing only the getter.
+              Object.defineProperty(navigatorPrototype, 'onLine',
+                  Object.assign(navigatorOnLineDescriptor, {
+                    get: () => false,
+                  }));
+            });
+
+            afterEach(() => {
+              // Restore the original property definition.
+              Object.defineProperty(
+                  navigatorPrototype, 'onLine', navigatorOnLineDescriptor);
+            });
+
+            it('does not handle HTTP_ERROR', () => {
+              onErrorCallback(httpError);
+              expect(httpError.handled).toBe(false);
+            });
+          });
+        });
+      });
+    });
+
     describe('setTextTrackVisibility', () => {
       beforeEach(() => {
         manifest = shaka.test.ManifestGenerator.generate((manifest) => {
@@ -440,13 +647,13 @@ describe('Player', () => {
       // Try a bogus streaming config (number instead of Object)
       logErrorSpy.calls.reset();
       player.configure({
-        streaming: 5,
+        drm: 5,
       });
 
       newConfig = player.getConfiguration();
       expect(newConfig).toEqual(defaultConfig);
       expect(logErrorSpy).toHaveBeenCalledWith(
-          stringContaining('.streaming'));
+          stringContaining('.drm'));
     });
 
     it('accepts synchronous function values for async function fields', () => {
@@ -1063,6 +1270,7 @@ describe('Player', () => {
         manifest.addVariant(106, (variant) => {  // spanish stereo, low res
           variant.language = 'es';
           variant.bandwidth = 1100;
+          variant.label = 'es-label';
           variant.addExistingStream(1);  // video
           variant.addAudio(6, (stream) => {
             stream.originalId = 'audio-es';
@@ -1074,6 +1282,7 @@ describe('Player', () => {
         manifest.addVariant(107, (variant) => {  // spanish stereo, high res
           variant.language = 'es';
           variant.bandwidth = 2100;
+          variant.label = 'es-label';
           variant.addExistingStream(2);  // video
           variant.addExistingStream(6);  // audio
         });
@@ -1340,7 +1549,7 @@ describe('Player', () => {
           type: 'variant',
           bandwidth: 1100,
           language: 'es',
-          label: null,
+          label: 'es-label',
           kind: null,
           width: 100,
           height: 200,
@@ -1376,7 +1585,7 @@ describe('Player', () => {
           type: 'variant',
           bandwidth: 2100,
           language: 'es',
-          label: null,
+          label: 'es-label',
           kind: null,
           width: 200,
           height: 400,
@@ -2047,6 +2256,18 @@ describe('Player', () => {
         roles: ['commentary'],
       }));
     });
+
+    it('chooses a variant with preferred audio label', async () => {
+      expect(getActiveVariantTrack().label).toBe(null);
+
+      player.configure({
+        preferredAudioLanguage: '',
+        preferredAudioLabel: 'es-label',
+      });
+
+      await player.load(fakeManifestUri, 0, fakeMimeType);
+      expect(getActiveVariantTrack().label).toBe('es-label');
+    });
   });  // describe('tracks')
 
   describe('languages', () => {
@@ -2656,6 +2877,51 @@ describe('Player', () => {
 
       activeVariant = getActiveVariantTrack();
       expect(activeVariant.id).toBe(1);
+    });
+
+    // Regression test for https://github.com/shaka-project/shaka-player/issues/4190
+    it('throws only one RESTRICTIONS_CANNOT_BE_MET error', async () => {
+      manifest = shaka.test.ManifestGenerator.generate((manifest) => {
+        manifest.addVariant(0, (variant) => {
+          variant.addVideo(1, (stream) => {
+            stream.keyIds = new Set(['abc']);
+          });
+        });
+      });
+
+      // Check that error is RESTRICTIONS_CANNOT_BE_MET
+      onError.and.callFake((e) => {
+        const error = e.detail;
+        shaka.test.Util.expectToEqualError(
+            error,
+            new shaka.util.Error(
+                shaka.util.Error.Severity.CRITICAL,
+                shaka.util.Error.Category.MANIFEST,
+                shaka.util.Error.Code.RESTRICTIONS_CANNOT_BE_MET, {
+                  hasAppRestrictions: false,
+                  missingKeys: ['abc'],
+                  restrictedKeyStatuses: [],
+                }));
+      });
+
+      await player.load(fakeManifestUri, 0, fakeMimeType);
+      const activeVariant = getActiveVariantTrack();
+      expect(activeVariant.id).toBe(0);
+
+      abrManager.chooseIndex = 0;
+      abrManager.chooseVariant.calls.reset();
+
+      onKeyStatus({'abc': 'output-restricted'});
+
+      // Ensure that RESTRICTIONS_CANNOT_BE_MET is thrown once
+      expect(onError).toHaveBeenCalledTimes(1);
+
+      // It does not call chooseVariant
+      expect(abrManager.chooseVariant).not.toHaveBeenCalled();
+
+      // The first variant is disallowed.
+      expect(manifest.variants[0].id).toBe(0);
+      expect(manifest.variants[0].allowedByKeySystem).toBe(false);
     });
 
     it('doesn\'t switch if the active stream isn\'t restricted', async () => {
@@ -3661,6 +3927,138 @@ describe('Player', () => {
         expect(thumbnail8.startTime).toBe(80);
         expect(thumbnail8.duration).toBe(10);
       });
+    });
+  });
+
+  describe('config streaming.startAtSegmentBoundary', () => {
+    // Test for https://github.com/shaka-project/shaka-player/issues/4188
+    // In that issue, using streaming.startAtSegmentBoundary in v4.0.0 caused
+    // an exception due to the use of a removed method.
+    it('adjusts start time', async () => {
+      player.configure('streaming.startAtSegmentBoundary', true);
+
+      // In order to adjust the start time to a segment boundary, we need
+      // segment descriptions in the segment index.  So create a non-default
+      // fake manifest.
+      const timeline = new shaka.media.PresentationTimeline(300, 0);
+      timeline.setStatic(true);
+      // This duration is used by useSegmentTemplate below to decide how many
+      // references to generate.
+      timeline.setDuration(300);
+      manifest = shaka.test.ManifestGenerator.generate((manifest) => {
+        manifest.presentationTimeline = timeline;
+        manifest.addVariant(0, (variant) => {
+          variant.addVideo(1, (stream) => {
+            stream.useSegmentTemplate(
+                '$Number$.mp4', /* segmentDuration= */ 10);
+          });
+        });
+      });
+
+      await player.load(fakeManifestUri, 12, fakeMimeType);
+
+      expect(playhead.setStartTime).toHaveBeenCalledWith(10);
+    });
+
+    it('does not fail with no segments', async () => {
+      player.configure('streaming.startAtSegmentBoundary', true);
+
+      // Without useSegmentTemplate in the fake manifest, the call to
+      // getIteratorForTime() in Player produces a null iterator.  Using the
+      // default fake manifest should cover that case.  But just to make sure,
+      // verify that we have no segments before calling load().
+      const variant = manifest.variants[0];
+      expect(variant.video.segmentIndex.getIteratorForTime(0)).toBeNull();
+      expect(variant.audio.segmentIndex.getIteratorForTime(0)).toBeNull();
+
+      await player.load(fakeManifestUri, 0, fakeMimeType);
+    });
+  });
+
+  describe('config streaming.failureCallback default', () => {
+    /** @type {jasmine.Spy} */
+    let retryStreaming;
+    /** @type {jasmine.Spy} */
+    let isLive;
+
+    /**
+     * @suppress {accessControls}
+     * @param {!shaka.util.Error} error
+     */
+    function defaultStreamingFailureCallback(error) {
+      player.defaultStreamingFailureCallback_(error);
+    }
+
+    beforeEach(() => {
+      retryStreaming = jasmine.createSpy('retryStreaming');
+      isLive = jasmine.createSpy('isLive');
+
+      player.retryStreaming = Util.spyFunc(retryStreaming);
+      player.isLive = Util.spyFunc(isLive);
+    });
+
+    it('ignores VOD failures', () => {
+      isLive.and.returnValue(false);
+
+      const error = new shaka.util.Error(
+          shaka.util.Error.Severity.CRITICAL,
+          shaka.util.Error.Category.NETWORK,
+          shaka.util.Error.Code.BAD_HTTP_STATUS,
+          /* url= */ '',
+          /* http_status= */ 404);
+
+      defaultStreamingFailureCallback(error);
+      expect(retryStreaming).not.toHaveBeenCalled();
+    });
+
+    it('retries live on HTTP 404', () => {
+      isLive.and.returnValue(true);
+
+      const error = new shaka.util.Error(
+          shaka.util.Error.Severity.CRITICAL,
+          shaka.util.Error.Category.NETWORK,
+          shaka.util.Error.Code.BAD_HTTP_STATUS,
+          /* url= */ '',
+          /* http_status= */ 404);
+
+      defaultStreamingFailureCallback(error);
+      expect(retryStreaming).toHaveBeenCalled();
+    });
+
+    it('retries live on generic HTTP error', () => {
+      isLive.and.returnValue(true);
+
+      const error = new shaka.util.Error(
+          shaka.util.Error.Severity.CRITICAL,
+          shaka.util.Error.Category.NETWORK,
+          shaka.util.Error.Code.HTTP_ERROR);
+
+      defaultStreamingFailureCallback(error);
+      expect(retryStreaming).toHaveBeenCalled();
+    });
+
+    it('retries live on HTTP timeout', () => {
+      isLive.and.returnValue(true);
+
+      const error = new shaka.util.Error(
+          shaka.util.Error.Severity.CRITICAL,
+          shaka.util.Error.Category.NETWORK,
+          shaka.util.Error.Code.TIMEOUT);
+
+      defaultStreamingFailureCallback(error);
+      expect(retryStreaming).toHaveBeenCalled();
+    });
+
+    it('ignores other live failures', () => {
+      isLive.and.returnValue(true);
+
+      const error = new shaka.util.Error(
+          shaka.util.Error.Severity.CRITICAL,
+          shaka.util.Error.Category.MEDIA,
+          shaka.util.Error.Code.VIDEO_ERROR);
+
+      defaultStreamingFailureCallback(error);
+      expect(retryStreaming).not.toHaveBeenCalled();
     });
   });
 

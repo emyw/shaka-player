@@ -263,8 +263,12 @@ shaka.test.ManifestGenerator.Variant = class {
     if (!isPartial) {
       /** @type {string} */
       this.language = 'und';
+      /** @type {string} */
+      this.label = '';
       /** @type {number} */
       this.bandwidth = 0;
+      /** @type {number} */
+      this.disabledUntilTime = 0;
       /** @type {boolean} */
       this.primary = false;
       /** @type {boolean} */
@@ -314,7 +318,7 @@ shaka.test.ManifestGenerator.Variant = class {
     const ContentType = shaka.util.ManifestParserUtils.ContentType;
     const stream = new shaka.test.ManifestGenerator.Stream(
         this.manifest_, /* isPartial= */ false, id, ContentType.AUDIO,
-        this.language);
+        this.language, this.label);
     if (func) {
       func(stream);
     }
@@ -391,8 +395,8 @@ shaka.test.ManifestGenerator.DrmInfo = class {
     this.videoRobustness = '';
     /** @type {Uint8Array} */
     this.serverCertificate = null;
-    /** @type {Array.<shaka.extern.InitDataOverride>} */
-    this.initData = null;
+    /** @type {!Array.<shaka.extern.InitDataOverride>} */
+    this.initData = [];
     /** @type {Set.<string>} */
     this.keyIds = new Set();
     /** @type {string} */
@@ -420,10 +424,7 @@ shaka.test.ManifestGenerator.DrmInfo = class {
    * @param {!Uint8Array} buffer
    */
   addInitData(type, buffer) {
-    if (!this.initData) {
-      this.initData = [];
-    }
-    this.initData.push({initData: buffer, initDataType: type});
+    this.initData.push({initData: buffer, initDataType: type, keyId: null});
   }
 
   /**
@@ -448,8 +449,9 @@ shaka.test.ManifestGenerator.Stream = class {
    * @param {?number} id
    * @param {shaka.util.ManifestParserUtils.ContentType} type
    * @param {string=} lang
+   * @param {string=} label
    */
-  constructor(manifest, isPartial, id, type, lang) {
+  constructor(manifest, isPartial, id, type, lang, label) {
     goog.asserts.assert(
         !manifest || !manifest.isIdUsed_(id),
         'Streams should have unique ids!');
@@ -519,7 +521,7 @@ shaka.test.ManifestGenerator.Stream = class {
       /** @type {string} */
       this.language = lang || 'und';
       /** @type {?string} */
-      this.label = null;
+      this.label = label || null;
       /** @type {boolean} */
       this.primary = false;
       /** @type {?shaka.extern.Stream} */
