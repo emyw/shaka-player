@@ -50,6 +50,7 @@ describe('UITextDisplayer', () => {
   });
 
   beforeEach(() => {
+    video.currentTime = 0;
     textDisplayer = new shaka.text.UITextDisplayer(video, videoContainer);
   });
 
@@ -395,5 +396,215 @@ describe('UITextDisplayer', () => {
     parentCueElements = textContainer.querySelectorAll('div');
     expect(parentCueElements.length).toBe(1);
     expect(parentCueElements[0].textContent).toBe('');
+  });
+
+  it('creates separate elements for cue regions', () => {
+    const cueRegion = new shaka.text.CueRegion();
+    cueRegion.id = 'regionId';
+    cueRegion.height = 80;
+    cueRegion.heightUnits = shaka.text.CueRegion.units.PERCENTAGE;
+    cueRegion.width = 80;
+    cueRegion.widthUnits = shaka.text.CueRegion.units.PERCENTAGE;
+    cueRegion.viewportAnchorX = 10;
+    cueRegion.viewportAnchorY = 10;
+    cueRegion.viewportAnchorUnits = shaka.text.CueRegion.units.PERCENTAGE;
+
+    // These all attach to the same region, but only one region element should
+    // be created.
+    const cues = [
+      new shaka.text.Cue(0, 100, ''),
+      new shaka.text.Cue(0, 100, ''),
+      new shaka.text.Cue(0, 100, ''),
+    ];
+    for (const cue of cues) {
+      cue.displayAlign = shaka.text.Cue.displayAlign.CENTER;
+      cue.region = cueRegion;
+    }
+
+    textDisplayer.setTextVisibility(true);
+    textDisplayer.append(cues);
+    updateCaptions();
+
+    const textContainer = videoContainer.querySelector('.shaka-text-container');
+    const allRegionElements = textContainer.querySelectorAll(
+        '.shaka-text-region');
+
+    // Verify that the nested cues are all attached to a single region element.
+    expect(allRegionElements.length).toBe(1);
+    const regionElement = allRegionElements[0];
+    const children = Array.from(regionElement.childNodes).filter(
+        (e) => e.nodeType == Node.ELEMENT_NODE);
+    expect(children.length).toBe(3);
+
+    // Verify styles applied to the region element.
+    const regionCssObj = parseCssText(regionElement.style.cssText);
+    const expectRegionCssObj = {
+      'position': 'absolute',
+      'height': '80%',
+      'width': '80%',
+      'top': '10%',
+      'left': '10%',
+      'display': 'flex',
+      'flex-direction': 'column',
+      'align-items': 'center',
+      'justify-content': 'center',
+    };
+    expect(regionCssObj).toEqual(jasmine.objectContaining(expectRegionCssObj));
+
+    for (const caption of children) {
+      // Verify that styles applied to the nested cues _DO NOT_ include region
+      // placement.
+      const cueCssObj = parseCssText(caption.style.cssText);
+      expect(Object.keys(cueCssObj)).not.toContain('height');
+      expect(Object.keys(cueCssObj)).not.toContain('width');
+      expect(Object.keys(cueCssObj)).not.toContain('top');
+      expect(Object.keys(cueCssObj)).not.toContain('left');
+    }
+  });
+
+  it('does not lose second item in a region', () => {
+    const cueRegion = new shaka.text.CueRegion();
+    cueRegion.id = 'regionId';
+    cueRegion.height = 80;
+    cueRegion.heightUnits = shaka.text.CueRegion.units.PERCENTAGE;
+    cueRegion.width = 80;
+    cueRegion.widthUnits = shaka.text.CueRegion.units.PERCENTAGE;
+    cueRegion.viewportAnchorX = 10;
+    cueRegion.viewportAnchorY = 10;
+    cueRegion.viewportAnchorUnits = shaka.text.CueRegion.units.PERCENTAGE;
+
+    // These have identical nested.
+    const cue1 = new shaka.text.Cue(168, 181.84, '');
+    cue1.nestedCues = [
+      new shaka.text.Cue(168, 181.84, ''),
+    ];
+    cue1.region = cueRegion;
+
+    const nested1 = new shaka.text.Cue(168, 170.92, '');
+    nested1.nestedCues = [new shaka.text.Cue(0, 170.92,
+        'Emo look. I mean listen.')];
+
+    const nested2 = new shaka.text.Cue(172, 174.84, '');
+    nested2.nestedCues = [new shaka.text.Cue(172, 174.84,
+        'You have to learn to listen.')];
+
+    const nested3 = new shaka.text.Cue(175.84, 177.64, '');
+    nested3.nestedCues = [new shaka.text.Cue(175.84, 177.64,
+        'This is not some game.')];
+
+    const nested4 = new shaka.text.Cue(177.68, 181.84, '');
+    nested4.nestedCues = [new shaka.text.Cue(177.68, 181.84,
+        'You - I mean we - we could easily die out here.')];
+
+    cue1.nestedCues[0].nestedCues = [nested1, nested2, nested3, nested4];
+
+    video.currentTime = 170;
+    textDisplayer.setTextVisibility(true);
+    textDisplayer.append([cue1]);
+    updateCaptions();
+
+    /** @type {Element} */
+    const textContainer = videoContainer.querySelector('.shaka-text-container');
+    let captions = textContainer.querySelectorAll('div');
+    expect(captions.length).toBe(1);
+    let allRegionElements = textContainer.querySelectorAll(
+        '.shaka-text-region');
+    // Verify that the nested cues are all attached to a single region element.
+    expect(allRegionElements.length).toBe(1);
+
+    // Advance time to where there is none to show
+    video.currentTime = 171;
+    updateCaptions();
+
+    allRegionElements = textContainer.querySelectorAll(
+        '.shaka-text-region');
+    expect(allRegionElements.length).toBe(1);
+
+    // Advance time to where there is something to show
+    video.currentTime = 173;
+    updateCaptions();
+
+    allRegionElements = textContainer.querySelectorAll(
+        '.shaka-text-region');
+    expect(allRegionElements.length).toBe(1);
+
+    captions = textContainer.querySelectorAll('div');
+
+    expect(captions.length).toBe(1);
+    expect(captions[0].textContent).toBe('You have to learn to listen.');
+
+    allRegionElements = textContainer.querySelectorAll(
+        '.shaka-text-region');
+    expect(allRegionElements.length).toBe(1);
+  });
+
+  it('creates separate regions when dimensions differ but id same', () => {
+    const identicalRegionId = 'regionId';
+
+    const cueRegion1 = new shaka.text.CueRegion();
+    const cueRegion2 = new shaka.text.CueRegion();
+    cueRegion1.id = identicalRegionId;
+    cueRegion2.id = identicalRegionId;
+
+    cueRegion1.height = 80;
+    cueRegion1.heightUnits = shaka.text.CueRegion.units.PERCENTAGE;
+    cueRegion1.width = 80;
+    cueRegion1.widthUnits = shaka.text.CueRegion.units.PERCENTAGE;
+
+    cueRegion2.height = 160; // the only difference!
+    cueRegion2.heightUnits = shaka.text.CueRegion.units.PERCENTAGE;
+    cueRegion2.width = 80;
+    cueRegion2.widthUnits = shaka.text.CueRegion.units.PERCENTAGE;
+
+    cueRegion1.viewportAnchorX = 10;
+    cueRegion1.viewportAnchorY = 10;
+    cueRegion1.viewportAnchorUnits = shaka.text.CueRegion.units.PERCENTAGE;
+
+    cueRegion2.viewportAnchorX = 10;
+    cueRegion2.viewportAnchorY = 10;
+    cueRegion2.viewportAnchorUnits = shaka.text.CueRegion.units.PERCENTAGE;
+
+    // These all attach to the same region, but only one region element should
+    // be created.
+    const firstBatchOfCues = [
+      new shaka.text.Cue(0, 100, ''),
+      new shaka.text.Cue(0, 100, ''),
+      new shaka.text.Cue(0, 100, ''),
+    ];
+    for (const cue of firstBatchOfCues) {
+      cue.displayAlign = shaka.text.Cue.displayAlign.CENTER;
+      cue.region = cueRegion1;
+    }
+
+    // Another batch for the other region
+    const secondBatchOfCues = [
+      new shaka.text.Cue(0, 100, ''),
+      new shaka.text.Cue(0, 100, ''),
+      new shaka.text.Cue(0, 100, ''),
+    ];
+    for (const cue of secondBatchOfCues) {
+      cue.displayAlign = shaka.text.Cue.displayAlign.CENTER;
+      cue.region = cueRegion2;
+    }
+
+    textDisplayer.setTextVisibility(true);
+    textDisplayer.append(firstBatchOfCues);
+    textDisplayer.append(secondBatchOfCues);
+    updateCaptions();
+
+    const textContainer = videoContainer.querySelector('.shaka-text-container');
+    const allRegionElements = textContainer.querySelectorAll(
+        '.shaka-text-region');
+
+    // Verify that the nested cues are attached to respective region element.
+    expect(allRegionElements.length).toBe(2);
+
+    const childrenOfOne = Array.from(allRegionElements[0].childNodes).filter(
+        (e) => e.nodeType == Node.ELEMENT_NODE);
+    expect(childrenOfOne.length).toBe(3);
+
+    const childrenOfTwo = Array.from(allRegionElements[1].childNodes).filter(
+        (e) => e.nodeType == Node.ELEMENT_NODE);
+    expect(childrenOfTwo.length).toBe(3);
   });
 });

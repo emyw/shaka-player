@@ -126,6 +126,9 @@ describe('Player', () => {
         corruptedFrames: jasmine.any(Number),
         estimatedBandwidth: jasmine.any(Number),
 
+        gapsJumped: jasmine.any(Number),
+        stallsDetected: jasmine.any(Number),
+
         completionPercent: jasmine.any(Number),
         loadLatency: jasmine.any(Number),
         manifestTimeSeconds: jasmine.any(Number),
@@ -200,88 +203,6 @@ describe('Player', () => {
         // This should not transition to null when invisible.
         expect(textTrack.cues).not.toBe(null);
       }
-    });
-
-    it('is called automatically if language prefs match', async () => {
-      // If the text is a match for the user's preferences, and audio differs
-      // from text, we enable text display automatically.
-
-      // NOTE: This is also a regression test for #1696, in which a change
-      // to this feature broke StreamingEngine initialization.
-
-      const preferredTextLanguage = 'fa';  // The same as in the content itself
-      player.configure({preferredTextLanguage: preferredTextLanguage});
-
-      // Now load a version of Sintel with delayed setup of video & audio
-      // streams and wait for completion.
-      await player.load('test:sintel_realistic_compiled');
-      // By this point, a MediaSource error would be thrown in a repro of bug
-      // #1696.
-
-      // Make sure the automatic setting took effect.
-      expect(player.isTextTrackVisible()).toBe(true);
-
-      // Make sure the content we tested with has text tracks, that the config
-      // we used matches the text language, and that the audio language differs.
-      // These will catch any changes to the underlying content that would
-      // invalidate the test setup.
-      expect(player.getTextTracks().length).not.toBe(0);
-      const textTrack = player.getTextTracks()[0];
-      expect(textTrack.language).toBe(preferredTextLanguage);
-
-      const variantTrack = player.getVariantTracks()[0];
-      expect(variantTrack.language).not.toBe(textTrack.language);
-    });
-
-    it('is not called automatically without language pref match', async () => {
-      // If the text preference doesn't match the content, we do not enable text
-      // display automatically.
-
-      const preferredTextLanguage = 'xx';  // Differs from the content itself
-      player.configure({preferredTextLanguage: preferredTextLanguage});
-
-      // Now load the content and wait for completion.
-      await player.load('test:sintel_realistic_compiled');
-
-      // Make sure the automatic setting did not happen.
-      expect(player.isTextTrackVisible()).toBe(false);
-
-      // Make sure the content we tested with has text tracks, that the config
-      // we used does not match the text language, and that the text and audio
-      // languages do not match each other (to keep this distinct from the next
-      // test case).  This will catch any changes to the underlying content that
-      // would invalidate the test setup.
-      expect(player.getTextTracks().length).not.toBe(0);
-      const textTrack = player.getTextTracks()[0];
-      expect(textTrack.language).not.toBe(preferredTextLanguage);
-
-      const variantTrack = player.getVariantTracks()[0];
-      expect(variantTrack.language).not.toBe(textTrack.language);
-    });
-
-    it('is not called automatically with audio and text match', async () => {
-      // If the audio and text tracks use the same language, we do not enable
-      // text display automatically, no matter the text preference.
-
-      const preferredTextLanguage = 'und';  // The same as in the content itself
-      player.configure({preferredTextLanguage: preferredTextLanguage});
-
-      // Now load the content and wait for completion.
-      await player.load('test:sintel_compiled');
-
-      // Make sure the automatic setting did not happen.
-      expect(player.isTextTrackVisible()).toBe(false);
-
-      // Make sure the content we tested with has text tracks, that the
-      // config we used matches the content, and that the text and audio
-      // languages match each other.  This will catch any changes to the
-      // underlying content that would invalidate the test setup.
-      expect(player.getTextTracks().length).not.toBe(0);
-      const textTrack = player.getTextTracks()[0];
-      expect(textTrack.language).toBe(preferredTextLanguage);
-
-      const variantTrack = player.getVariantTracks()[0];
-      expect(variantTrack.language).toBe(textTrack.language);
     });
 
     // Repro for https://github.com/shaka-project/shaka-player/issues/1879.
@@ -373,6 +294,160 @@ describe('Player', () => {
     });
   });  // describe('setTextTrackVisibility')
 
+  describe('autoShowText', () => {
+    async function textMatchesAudioDoesNot() {
+      const preferredTextLanguage = 'fa';  // The same as in the content
+      player.configure({preferredTextLanguage: preferredTextLanguage});
+
+      // NOTE: This is also a regression test for #1696, in which a change to
+      // this feature broke StreamingEngine initialization.
+
+      // Now load a version of Sintel with delayed setup of video & audio
+      // streams and wait for completion.
+      await player.load('test:sintel_realistic_compiled');
+      // By this point, a MediaSource error would be thrown in a repro of bug
+      // #1696.
+
+      // Make sure the content we tested with has text tracks, that the config
+      // we used matches the text language, and that the audio language differs.
+      // These will catch any changes to the underlying content that would
+      // invalidate the test setup.
+      expect(player.getTextTracks().length).not.toBe(0);
+      const textTrack = player.getTextTracks()[0];
+      expect(textTrack.language).toBe(preferredTextLanguage);
+
+      const variantTrack = player.getVariantTracks()[0];
+      expect(variantTrack.language).not.toBe(textTrack.language);
+    }
+
+    async function textDoesNotMatch() {
+      const preferredTextLanguage = 'xx';  // Differs from the content
+      player.configure({preferredTextLanguage: preferredTextLanguage});
+
+      // Now load the content and wait for completion.
+      await player.load('test:sintel_realistic_compiled');
+
+      // Make sure the content we tested with has text tracks, that the config
+      // we used does not match the text language, and that the text and audio
+      // languages do not match each other (to keep this distinct from the next
+      // test case).  This will catch any changes to the underlying content that
+      // would invalidate the test setup.
+      expect(player.getTextTracks().length).not.toBe(0);
+      const textTrack = player.getTextTracks()[0];
+      expect(textTrack.language).not.toBe(preferredTextLanguage);
+
+      const variantTrack = player.getVariantTracks()[0];
+      expect(variantTrack.language).not.toBe(textTrack.language);
+    }
+
+    async function textAndAudioMatch() {
+      const preferredTextLanguage = 'und';  // The same as in the content
+      player.configure({preferredTextLanguage: preferredTextLanguage});
+
+      // Now load the content and wait for completion.
+      await player.load('test:sintel_compiled');
+
+      // Make sure the content we tested with has text tracks, that the config
+      // we used matches the content, and that the text and audio languages
+      // match each other.  This will catch any changes to the underlying
+      // content that would invalidate the test setup.
+      expect(player.getTextTracks().length).not.toBe(0);
+      const textTrack = player.getTextTracks()[0];
+      expect(textTrack.language).toBe(preferredTextLanguage);
+
+      const variantTrack = player.getVariantTracks()[0];
+      expect(variantTrack.language).toBe(textTrack.language);
+    }
+
+    describe('IF_SUBTITLES_MAY_BE_NEEDED', () => {
+      beforeEach(() => {
+        player.configure(
+            'autoShowText',
+            shaka.config.AutoShowText.IF_SUBTITLES_MAY_BE_NEEDED);
+      });
+
+      it('enables text if text matches and audio does not', async () => {
+        await textMatchesAudioDoesNot();
+        expect(player.isTextTrackVisible()).toBe(true);
+      });
+
+      it('disables text if text does not match', async () => {
+        await textDoesNotMatch();
+        expect(player.isTextTrackVisible()).toBe(false);
+      });
+
+      it('disables text if both text and audio match', async () => {
+        await textAndAudioMatch();
+        expect(player.isTextTrackVisible()).toBe(false);
+      });
+    });  // IF_SUBTITLES_MAY_BE_NEEDED
+
+    describe('IF_PREFERRED_TEXT_LANGUAGE', () => {
+      beforeEach(() => {
+        player.configure(
+            'autoShowText',
+            shaka.config.AutoShowText.IF_PREFERRED_TEXT_LANGUAGE);
+      });
+
+      it('enables text if text matches and audio does not', async () => {
+        await textMatchesAudioDoesNot();
+        expect(player.isTextTrackVisible()).toBe(true);
+      });
+
+      it('disables text if text does not match', async () => {
+        await textDoesNotMatch();
+        expect(player.isTextTrackVisible()).toBe(false);
+      });
+
+      it('enables text if both text and audio match', async () => {
+        await textAndAudioMatch();
+        expect(player.isTextTrackVisible()).toBe(true);
+      });
+    });  // IF_PREFERRED_TEXT_LANGUAGE
+
+    describe('ALWAYS', () => {
+      beforeEach(() => {
+        player.configure('autoShowText', shaka.config.AutoShowText.ALWAYS);
+      });
+
+      it('enables text if text matches and audio does not', async () => {
+        await textMatchesAudioDoesNot();
+        expect(player.isTextTrackVisible()).toBe(true);
+      });
+
+      it('enables text if text does not match', async () => {
+        await textDoesNotMatch();
+        expect(player.isTextTrackVisible()).toBe(true);
+      });
+
+      it('enables text if both text and audio match', async () => {
+        await textAndAudioMatch();
+        expect(player.isTextTrackVisible()).toBe(true);
+      });
+    });  // ALWAYS
+
+    describe('NEVER', () => {
+      beforeEach(() => {
+        player.configure('autoShowText', shaka.config.AutoShowText.NEVER);
+      });
+
+      it('disables text if text matches and audio does not', async () => {
+        await textMatchesAudioDoesNot();
+        expect(player.isTextTrackVisible()).toBe(false);
+      });
+
+      it('disables text if text does not match', async () => {
+        await textDoesNotMatch();
+        expect(player.isTextTrackVisible()).toBe(false);
+      });
+
+      it('disables text if both text and audio match', async () => {
+        await textAndAudioMatch();
+        expect(player.isTextTrackVisible()).toBe(false);
+      });
+    });  // NEVER
+  });  // AutoShowText
+
   describe('plays', () => {
     it('with external text tracks', async () => {
       await player.load('test:sintel_no_text_compiled');
@@ -431,7 +506,7 @@ describe('Player', () => {
       // Seek the video, and see if it can continue playing from that point.
       video.currentTime = 20;
       // Expect that we can then reach the end of the video.
-      await waiter.timeoutAfter(20).waitForEnd(video);
+      await waiter.timeoutAfter(40).waitForEnd(video);
     });
 
     // Regression test for #2326.
@@ -782,7 +857,7 @@ describe('Player', () => {
       /** @type {shaka.test.Waiter} */
       const waiter = new shaka.test.Waiter(eventManager)
           .setPlayer(player)
-          .timeoutAfter(20)
+          .timeoutAfter(40)
           .failOnTimeout(true);
       await waiter.waitForEnd(video);
 
@@ -895,7 +970,7 @@ describe('Player', () => {
       expect(getBufferedBehind()).toBe(20);  // Buffered to start still.
       video.currentTime = 50;
       await waitUntilBuffered(30);
-      expect(getBufferedBehind()).toBeLessThan(30);
+      expect(getBufferedBehind()).toBeLessThan(40);  // 30 + segment_size
 
       player.configure('streaming.bufferBehind', 10);
       // We only evict content when we append a segment, so increase the
@@ -922,7 +997,7 @@ describe('Player', () => {
     }
 
     async function waitUntilBuffered(amount) {
-      for (let i = 0; i < 25; i++) {
+      for (let i = 0; i < 50; i++) {
         // We buffer from an internal segment, so this shouldn't take long to
         // buffer.
         await Util.delay(0.1);  // eslint-disable-line no-await-in-loop
@@ -930,7 +1005,14 @@ describe('Player', () => {
           return;
         }
       }
-      throw new Error('Timeout waiting to buffer');
+
+      const ranges =
+          shaka.media.TimeRangesUtils.getBufferedInfo(video.buffered);
+      const currentTime = video.currentTime;
+      const target = currentTime + amount;
+
+      throw new Error('Timeout waiting to buffer! ' +
+          JSON.stringify({ranges, currentTime, target}));
     }
   });  // describe('buffering')
 
@@ -1069,16 +1151,16 @@ describe('Player', () => {
     });
   });  // describe('unloading')
 
-  describe('chapters', () => {
-    it('add external chapters in vtt format', async () => {
+  describe('addChaptersTrack', () => {
+    it('adds external chapters in vtt format', async () => {
       await player.load('test:sintel_no_text_compiled');
       const locationUri = new goog.Uri(location.href);
       const partialUri1 = new goog.Uri('/base/test/test/assets/chapters.vtt');
       const absoluteUri1 = locationUri.resolve(partialUri1);
       await player.addChaptersTrack(absoluteUri1.toString(), 'en');
 
-      await shaka.test.Util.delay(1.5);
-
+      // Data should be available as soon as addChaptersTrack resolves.
+      // See https://github.com/shaka-project/shaka-player/issues/4186
       const chapters = player.getChapters('en');
       expect(chapters.length).toBe(3);
       const chapter1 = chapters[0];
@@ -1097,8 +1179,6 @@ describe('Player', () => {
       const partialUri2 = new goog.Uri('/base/test/test/assets/chapters2.vtt');
       const absoluteUri2 = locationUri.resolve(partialUri2);
       await player.addChaptersTrack(absoluteUri2.toString(), 'en');
-
-      await shaka.test.Util.delay(1.5);
 
       const chaptersUpdated = player.getChapters('en');
       expect(chaptersUpdated.length).toBe(6);
@@ -1128,14 +1208,12 @@ describe('Player', () => {
       expect(chapterUpdated6.endTime).toBe(61.349);
     });
 
-    it('add external chapters in srt format', async () => {
+    it('adds external chapters in srt format', async () => {
       await player.load('test:sintel_no_text_compiled');
       const locationUri = new goog.Uri(location.href);
       const partialUri = new goog.Uri('/base/test/test/assets/chapters.srt');
       const absoluteUri = locationUri.resolve(partialUri);
       await player.addChaptersTrack(absoluteUri.toString(), 'es');
-
-      await shaka.test.Util.delay(1.5);
 
       const chapters = player.getChapters('es');
       expect(chapters.length).toBe(3);
@@ -1152,5 +1230,75 @@ describe('Player', () => {
       expect(chapter3.startTime).toBe(30);
       expect(chapter3.endTime).toBe(61.349);
     });
-  });  // describe('chapters')
+  });  // describe('addChaptersTrack')
+
+  it('requires a license server for HLS ClearKey content', async () => {
+    const expectedError = Util.jasmineError(new shaka.util.Error(
+        shaka.util.Error.Severity.CRITICAL,
+        shaka.util.Error.Category.DRM,
+        shaka.util.Error.Code.NO_LICENSE_SERVER_GIVEN,
+        'org.w3.clearkey'));
+    await expectAsync(player.load('test:sintel-hls-clearkey'))
+        .toBeRejectedWith(expectedError);
+  });
+
+  describe('addThumbnailsTrack', () => {
+    it('appends thumbnails for external thumbnails with sprites',
+        async () => {
+          await player.load('test:sintel_no_text_compiled');
+          const locationUri = new goog.Uri(location.href);
+          const partialUri =
+              new goog.Uri('/base/test/test/assets/thumbnails-sprites.vtt');
+          const absoluteUri = locationUri.resolve(partialUri);
+          const newTrack =
+              await player.addThumbnailsTrack(absoluteUri.toString());
+
+          expect(player.getImageTracks()).toEqual([newTrack]);
+
+          const thumbnail1 = await player.getThumbnails(newTrack.id, 0);
+          expect(thumbnail1.startTime).toBe(0);
+          expect(thumbnail1.duration).toBe(5);
+          expect(thumbnail1.height).toBe(90);
+          expect(thumbnail1.positionX).toBe(0);
+          expect(thumbnail1.positionY).toBe(0);
+          expect(thumbnail1.width).toBe(160);
+          const thumbnail2 = await player.getThumbnails(newTrack.id, 10);
+          expect(thumbnail2.startTime).toBe(5);
+          expect(thumbnail2.duration).toBe(25);
+          expect(thumbnail2.height).toBe(90);
+          expect(thumbnail2.positionX).toBe(160);
+          expect(thumbnail2.positionY).toBe(0);
+          expect(thumbnail2.width).toBe(160);
+          const thumbnail3 = await player.getThumbnails(newTrack.id, 40);
+          expect(thumbnail3.startTime).toBe(30);
+          expect(thumbnail3.duration).toBe(30);
+          expect(thumbnail3.height).toBe(90);
+          expect(thumbnail3.positionX).toBe(160);
+          expect(thumbnail3.positionY).toBe(90);
+          expect(thumbnail3.width).toBe(160);
+        });
+
+    it('appends thumbnails for external thumbnails without sprites',
+        async () => {
+          await player.load('test:sintel_no_text_compiled');
+          const locationUri = new goog.Uri(location.href);
+          const partialUri =
+              new goog.Uri('/base/test/test/assets/thumbnails.vtt');
+          const absoluteUri = locationUri.resolve(partialUri);
+          const newTrack =
+              await player.addThumbnailsTrack(absoluteUri.toString());
+
+          expect(player.getImageTracks()).toEqual([newTrack]);
+
+          const thumbnail1 = await player.getThumbnails(newTrack.id, 0);
+          expect(thumbnail1.startTime).toBe(0);
+          expect(thumbnail1.duration).toBe(5);
+          const thumbnail2 = await player.getThumbnails(newTrack.id, 10);
+          expect(thumbnail2.startTime).toBe(5);
+          expect(thumbnail2.duration).toBe(25);
+          const thumbnail3 = await player.getThumbnails(newTrack.id, 40);
+          expect(thumbnail3.startTime).toBe(30);
+          expect(thumbnail3.duration).toBe(30);
+        });
+  });  // describe('addThumbnailsTrack')
 });

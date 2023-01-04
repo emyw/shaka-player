@@ -25,6 +25,7 @@ application:
     - TextDecoder/TextEncoder platform support or polyfill required (affects
       Xbox One, but not evergreen browsers); we suggest the polyfill
       [https://github.com/anonyco/FastestSmallestTextEncoderDecoder](fastestsmallesttextencoderdecoder/EncoderDecoderTogether.min.js)
+      Fallback included by default in v4.2
 
   - Support removed:
     - IE11 support removed
@@ -42,10 +43,12 @@ application:
       `manifest.defaultPresentationDelay` (deprecated in v3.0.0)
     - Configuration of factories should be plain factory functions, not
       constructors; these will not be invoked with `new` (deprecated in v3.1.0)
-    - `drm.initDataTransform` has been removed (no longer needed since the
-      minimum supported version of iOS is now 13)
+    - `drm.initDataTransform` now defaults to a no-op
     - `streaming.smallGapLimit` and `streaming.jumpLargeGaps` have been removed;
       all gaps will now be jumped
+    - `manifest.hls.useFullSegmentsForStartTime` has been removed; this setting
+      is no longer necessary, as we no longer fetch segments for start times in
+      the HLS parser
 
   - Player API changes:
     - `shaka.Player.prototype.addTextTrack()` has been replaced by
@@ -87,3 +90,9 @@ application:
       clearly-named `lineBreak` (deprecated in v3.1.0)
     - `IUIElement` plugins must have a `release()` method (not `destroy()`)
       (deprecated in v3.0.0)
+
+## v5.0 (unreleased)
+
+  - Configuration changes:
+    - `streaming.forceTransmuxTS` has been renamed to `streaming.forceTransmux`
+      (deprecated in v4.3.0)
