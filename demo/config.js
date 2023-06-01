@@ -135,7 +135,9 @@ shakaDemo.Config = class {
             /* canBeZero= */ false,
             /* canBeUnset= */ true)
         .addBoolInput_(MessageIds.PARSE_INBAND_PSSH_ENABLED,
-            'drm.parseInbandPsshEnabled');
+            'drm.parseInbandPsshEnabled')
+        .addTextInput_(MessageIds.MIN_HDCP_VERSION,
+            'drm.minHdcpVersion');
     const advanced = shakaDemoMain.getConfiguration().drm.advanced || {};
     const addDRMAdvancedField = (name, valueName, suggestions) => {
       // All advanced fields of a given type are set at once.
@@ -222,6 +224,10 @@ shakaDemo.Config = class {
             'manifest.hls.useSafariBehaviorForLive')
         .addNumberInput_(MessageIds.LIVE_SEGMENTS_DELAY,
             'manifest.hls.liveSegmentsDelay')
+        .addBoolInput_(MessageIds.HLS_SEQUENCE_MODE,
+            'manifest.hls.sequenceMode')
+        .addBoolInput_(MessageIds.IGNORE_MANIFEST_TIMESTAMPS_IN_SEGMENTS_MODE,
+            'manifest.hls.ignoreManifestTimestampsInSegmentsMode')
         .addNumberInput_(MessageIds.AVAILABILITY_WINDOW_OVERRIDE,
             'manifest.availabilityWindowOverride',
             /* canBeDecimal= */ true,
@@ -237,7 +243,7 @@ shakaDemo.Config = class {
             /* canBeDecimal= */ false,
             /* canBeZero= */ false,
             /* canBeUnset= */ true)
-        .addBoolInput_(MessageIds.SEQUENCE_MODE,
+        .addBoolInput_(MessageIds.DASH_SEQUENCE_MODE,
             'manifest.dash.sequenceMode')
         .addBoolInput_(MessageIds.DISABLE_AUDIO,
             'manifest.disableAudio')
@@ -248,7 +254,9 @@ shakaDemo.Config = class {
         .addBoolInput_(MessageIds.DISABLE_THUMBNAILS,
             'manifest.disableThumbnails')
         .addBoolInput_(MessageIds.SEGMENT_RELATIVE_VTT_TIMING,
-            'manifest.segmentRelativeVttTiming');
+            'manifest.segmentRelativeVttTiming')
+        .addBoolInput_(MessageIds.MSS_SEQUENCE_MODE,
+            'manifest.mss.sequenceMode');
 
     this.addRetrySection_('manifest', MessageIds.MANIFEST_RETRY_SECTION_HEADER);
   }
@@ -422,7 +430,9 @@ shakaDemo.Config = class {
         .addBoolInput_(MessageIds.OBSERVE_QUALITY_CHANGES,
             'streaming.observeQualityChanges')
         .addNumberInput_(MessageIds.MAX_DISABLED_TIME,
-            'streaming.maxDisabledTime');
+            'streaming.maxDisabledTime')
+        .addNumberInput_(MessageIds.SEGMENT_PREFETCH_LIMIT,
+            'streaming.segmentPrefetchLimit');
 
     if (!shakaDemoMain.getNativeControlsEnabled()) {
       this.addBoolInput_(MessageIds.ALWAYS_STREAM_TEXT,

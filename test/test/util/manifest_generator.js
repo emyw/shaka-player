@@ -97,6 +97,10 @@ shaka.test.ManifestGenerator.Manifest = class {
     this.minBufferTime = 0;
     /** @type {boolean} */
     this.sequenceMode = false;
+    /** @type {boolean} */
+    this.ignoreManifestTimestampsInSegmentsMode = false;
+    /** @type {string} */
+    this.type = 'UNKNOWN';
 
     /** @type {shaka.extern.Manifest} */
     const foo = this;
@@ -544,6 +548,8 @@ shaka.test.ManifestGenerator.Stream = class {
       this.hdr = undefined;
       /** @type {(string|undefined)} */
       this.tilesLayout = undefined;
+      /** @type {?shaka.dash.DashParser.AccessibilityPurpose} */
+      this.accessibilityPurpose;
     }
 
     /** @type {shaka.extern.Stream} */

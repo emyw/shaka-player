@@ -112,6 +112,7 @@ shaka.extern.Request;
 /**
  * @typedef {{
  *   uri: string,
+ *   originalUri: string,
  *   data: BufferSource,
  *   status: (number|undefined),
  *   headers: !Object.<string, string>,
@@ -200,14 +201,39 @@ shaka.extern.HeadersReceived;
 
 
 /**
+ * @typedef {{
+ *   type: (shaka.net.NetworkingEngine.AdvancedRequestType|undefined),
+ *   stream: (shaka.extern.Stream|undefined),
+ *   segment: (shaka.media.SegmentReference|undefined)
+ * }}
+ *
+ * @description
+ * Defines contextual data about a request
+ *
+ * @property {shaka.net.NetworkingEngine.AdvancedRequestType=} type
+ *   The advanced type
+ * @property {shaka.extern.Stream=} stream
+ *   The duration of the segment in seconds
+ * @property {shaka.media.SegmentReference=} segment
+ *   The request's segment reference
+ * @exportDoc
+ */
+shaka.extern.RequestContext;
+
+
+/**
  * Defines a filter for requests.  This filter takes the request and modifies
  * it before it is sent to the scheme plugin.
- * A request filter can run asynchronously by returning a promise; in this case,
- * the request will not be sent until the promise is resolved.
+ * The RequestType describes the basic type of the request (manifest, segment,
+ * etc). The optional RequestContext will be provided where applicable to
+ * provide additional infomation about the request. A request filter can run
+ * asynchronously by returning a promise; in this case, the request will not be
+ * sent until the promise is resolved.
  *
  * @typedef {!function(shaka.net.NetworkingEngine.RequestType,
- *                     shaka.extern.Request):
-             (Promise|undefined)}
+ *                     shaka.extern.Request,
+ *                     shaka.extern.RequestContext=):
+ *           (Promise|undefined)}
  * @exportDoc
  */
 shaka.extern.RequestFilter;
@@ -216,11 +242,15 @@ shaka.extern.RequestFilter;
 /**
  * Defines a filter for responses.  This filter takes the response and modifies
  * it before it is returned.
- * A response filter can run asynchronously by returning a promise.
+ * The RequestType describes the basic type of the request (manifest, segment,
+ * etc). The optional RequestContext will be provided where applicable to
+ * provide additional infomation about the request. A response filter can run
+ * asynchronously by returning a promise.
  *
  * @typedef {!function(shaka.net.NetworkingEngine.RequestType,
- *                     shaka.extern.Response):
-              (Promise|undefined)}
+ *                     shaka.extern.Response,
+ *                     shaka.extern.RequestContext=):
+ *            (Promise|undefined)}
  * @exportDoc
  */
 shaka.extern.ResponseFilter;

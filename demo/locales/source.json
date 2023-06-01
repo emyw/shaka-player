@@ -219,6 +219,10 @@
     "description": "Text that describes an asset that comes from the Dash Industry Forum asset library.",
     "message": "[PROPER_NAME:DASH-IF]"
   },
+  "DEMO_DASH_SEQUENCE_MODE": {
+    "description": "The name of a configuration value.",
+    "message": "Enable DASH sequence mode"
+  },
   "DEMO_DEFAULT_AUDIO_CODEC": {
     "description": "The name of a configuration value.",
     "message": "Default Audio Codec"
@@ -379,6 +383,10 @@
     "description": "Text that describes an asset that is packaged in an HLS manifest.",
     "message": "[PROPER_NAME:HLS]"
   },
+  "DEMO_HLS_SEQUENCE_MODE": {
+    "description": "The name of a configuration value.",
+    "message": "Enable HLS sequence mode"
+  },
   "DEMO_HLS_TAB": {
     "description": "The header for a tab within the custom asset creation dialog.",
     "message": "[PROPER_NAME:HLS]"
@@ -427,6 +435,10 @@
     "description": "The label on a field that allows users to provide a content source id for a custom asset.",
     "message": "Asset key (for VOD DAI Content)"
   },
+  "DEMO_IMA_MANIFEST_TYPE": {
+    "description": "The label on a field that allows users to provide a manifest type for a custom asset.",
+    "message": "Manifest type (for DAI Content)"
+  },
   "DEMO_IMA_VIDEO_ID": {
     "description": "The label on a field that allows users to provide a video id for a custom asset.",
     "message": "Video ID (for VOD DAI Content)"
@@ -434,6 +446,10 @@
   "DEMO_IGNORE_MANIFEST_PROGRAM_DATE_TIME": {
     "description": "The name of a configuration value.",
     "message": "Ignore Program Date Time from manifest"
+  },
+  "DEMO_IGNORE_MANIFEST_TIMESTAMPS_IN_SEGMENTS_MODE": {
+    "description": "The name of a configuration value.",
+    "message": "Ignore Manifest Timestamps in Segments Mode"
   },
   "DEMO_IGNORE_MIN_BUFFER_TIME": {
     "description": "The name of a configuration value.",
@@ -631,6 +647,10 @@
     "description": "The name of a configuration value.",
     "message": "Min Bytes"
   },
+  "DEMO_MIN_HDCP_VERSION": {
+    "description": "The name of a configuration value.",
+    "message": "Min HDCP version"
+  },
   "DEMO_MIN_FRAMERATE": {
     "description": "The name of a configuration value.",
     "message": "Min Framerate"
@@ -658,6 +678,14 @@
   "DEMO_MP4": {
     "description": "Text that describes an asset that uses the MP4 container.",
     "message": "[JARGON:MP4]"
+  },
+  "DEMO_MSS": {
+    "description": "Text that describes an asset that is packaged in an MSS manifest.",
+    "message": "[PROPER_NAME:MSS]"
+  },
+  "DEMO_MSS_SEQUENCE_MODE": {
+    "description": "The name of a configuration value.",
+    "message": "Enable MSS sequence mode"
   },
   "DEMO_MULTIPLE_LANGUAGES": {
     "description": "A tag that marks an asset as having multiple languages.",
@@ -798,10 +826,6 @@
   "DEMO_SEGMENT_RELATIVE_VTT_TIMING": {
     "description": "The name of a configuration value.",
     "message": "Enable segment-relative VTT Timing"
-  },
-  "DEMO_SEQUENCE_MODE": {
-    "description": "The name of a configuration value.",
-    "message": "Enable sequence mode"
   },
   "DEMO_SESSION_ID": {
     "description": "The name of a configuration value.",
@@ -944,28 +968,32 @@
     "message": "This asset is disabled."
   },
   "DEMO_UNSUPPORTED_NO_DASH_SUPPORT": {
-    "description": "An error message that shows why an asset cannot be stored offline: the browser cannot play MPEG-DASH (https://en.wikipedia.org/wiki/Dynamic_Adaptive_Streaming_over_HTTP) content.",
+    "description": "An error message that shows why an asset cannot be stored or played.",
     "message": "Your browser does not support [PROPER_NAME:MPEG-DASH] manifests."
   },
   "DEMO_UNSUPPORTED_NO_DOWNLOAD": {
-    "description": "An error message that shows why an asset cannot be stored offline: the asset cannot be downloaded by any browser.",
+    "description": "An error message that shows why an asset cannot be stored offline: the asset cannot be downloaded.",
     "message": "This asset cannot be downloaded."
   },
   "DEMO_UNSUPPORTED_NO_FORMAT_SUPPORT": {
-    "description": "An error message that shows why an asset cannot be stored offline: the browser cannot play that sort of video.",
+    "description": "An error message that shows why an asset cannot be stored or played.",
     "message": "Your browser does not support the required video format."
   },
   "DEMO_UNSUPPORTED_NO_HLS_SUPPORT": {
-    "description": "An error message that shows why an asset cannot be stored offline: the browser cannot play HLS (https://en.wikipedia.org/wiki/HTTP_Live_Streaming) content.",
+    "description": "An error message that shows why an asset cannot be stored or played.",
     "message": "Your browser does not support [PROPER_NAME:HLS] manifests."
   },
   "DEMO_UNSUPPORTED_NO_KEY_SUPPORT": {
-    "description": "An error message that shows why an asset cannot be stored offline: the browser does not support the asset's Digital Rights Management system.",
+    "description": "An error message that shows why an asset cannot be stored or played.",
     "message": "Your browser does not support the required key systems."
   },
   "DEMO_UNSUPPORTED_NO_LICENSE_SUPPORT": {
     "description": "An error message that shows why an asset cannot be stored offline: the browser cannot store protected content offline.",
     "message": "Your browser does not support offline licenses for the required key systems."
+  },
+  "DEMO_UNSUPPORTED_NO_MSS_SUPPORT": {
+    "description": "An error message that shows why an asset cannot be stored or played.",
+    "message": "Your browser does not support [PROPER_NAME:MSS] manifests."
   },
   "DEMO_UNSUPPORTED_NO_OFFLINE": {
     "description": "An error message that shows why an asset cannot be stored offline: the browser does not support storing things offline, in general.",
@@ -1042,5 +1070,9 @@
   "DEMO_XLINK_SEARCH": {
     "description": "A tooltip for an optional search term.",
     "message": "Filters for assets that have [JARGON:XLINK] tags in their manifests, so that they can be broken into multiple files."
+  },
+  "DEMO_SEGMENT_PREFETCH_LIMIT": {
+    "description": "Max number of segments to be prefetched ahead of current time position.",
+    "message": "Segment Prefetch Limit."
   }
 }

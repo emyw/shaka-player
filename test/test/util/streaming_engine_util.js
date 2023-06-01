@@ -28,12 +28,12 @@ shaka.test.StreamingEngineUtil = class {
   static createFakeNetworkingEngine(getInitSegment, getSegment, delays) {
     const netEngine = new shaka.test.FakeNetworkingEngine();
 
-    netEngine.request.and.callFake((requestType, request) => {
+    netEngine.request.and.callFake((requestType, request, context) => {
       expect(requestType).toBeTruthy();
       expect(request.uris.length).toBe(1);
 
       const parts = request.uris[0].split('_');
-      expect(parts.length).toBe(3);
+      expect(parts.length).toBeGreaterThanOrEqual(3);
 
       const periodIndex = Number(parts[0]);
       expect(periodIndex).not.toBeNaN();
@@ -284,6 +284,8 @@ shaka.test.StreamingEngineUtil = class {
       textStreams: [],
       imageStreams: [],
       sequenceMode: false,
+      ignoreManifestTimestampsInSegmentsMode: false,
+      type: 'UNKNOWN',
     };
 
     /** @type {shaka.extern.Variant} */
@@ -410,6 +412,7 @@ shaka.test.StreamingEngineUtil = class {
       roles: [],
       forced: false,
       spatialAudio: false,
+      accessibilityPurpose: null,
     };
   }
 
@@ -447,6 +450,7 @@ shaka.test.StreamingEngineUtil = class {
       roles: [],
       forced: false,
       spatialAudio: false,
+      accessibilityPurpose: null,
     };
   }
 
@@ -482,6 +486,7 @@ shaka.test.StreamingEngineUtil = class {
       roles: [],
       forced: false,
       spatialAudio: false,
+      accessibilityPurpose: null,
     };
   }
 };

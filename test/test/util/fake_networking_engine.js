@@ -174,9 +174,11 @@ shaka.test.FakeNetworkingEngine = class {
    *
    * @param {string} uri
    * @param {shaka.net.NetworkingEngine.RequestType} type
+   * @param {shaka.extern.RequestContext=} context
    */
-  expectRequest(uri, type) {
-    shaka.test.FakeNetworkingEngine.expectRequest(this.request, uri, type);
+  expectRequest(uri, type, context) {
+    shaka.test.FakeNetworkingEngine.expectRequest(
+        this.request, uri, type, context);
   }
 
   /**
@@ -184,9 +186,11 @@ shaka.test.FakeNetworkingEngine = class {
    *
    * @param {string} uri
    * @param {shaka.net.NetworkingEngine.RequestType} type
+   * @param {shaka.extern.RequestContext=} context
    */
-  expectNoRequest(uri, type) {
-    shaka.test.FakeNetworkingEngine.expectNoRequest(this.request, uri, type);
+  expectNoRequest(uri, type, context) {
+    shaka.test.FakeNetworkingEngine.expectNoRequest(
+        this.request, uri, type, context);
   }
 
   /**
@@ -195,10 +199,11 @@ shaka.test.FakeNetworkingEngine = class {
    * @param {string} uri
    * @param {number} startByte
    * @param {?number} endByte
+   * @param {boolean} isInit
    */
-  expectRangeRequest(uri, startByte, endByte) {
+  expectRangeRequest(uri, startByte, endByte, isInit) {
     shaka.test.FakeNetworkingEngine.expectRangeRequest(
-        this.request, uri, startByte, endByte);
+        this.request, uri, startByte, endByte, isInit);
   }
 
   /**
@@ -289,10 +294,18 @@ shaka.test.FakeNetworkingEngine = class {
    * @param {!Object} requestSpy
    * @param {string} uri
    * @param {shaka.net.NetworkingEngine.RequestType} type
+   * @param {shaka.extern.RequestContext=} context
    */
-  static expectRequest(requestSpy, uri, type) {
-    expect(requestSpy).toHaveBeenCalledWith(
-        type, jasmine.objectContaining({uris: [uri]}));
+  static expectRequest(requestSpy, uri, type, context) {
+    // Jasmine "toHaveBeenCalledWith" doesn't handle optional parameters well.
+    if (context != undefined) {
+      expect(requestSpy).toHaveBeenCalledWith(
+          type, jasmine.objectContaining({uris: [uri]}),
+          jasmine.objectContaining({type: context.type}));
+    } else {
+      expect(requestSpy).toHaveBeenCalledWith(
+          type, jasmine.objectContaining({uris: [uri]}));
+    }
   }
 
   /**
@@ -301,10 +314,18 @@ shaka.test.FakeNetworkingEngine = class {
    * @param {!Object} requestSpy
    * @param {string} uri
    * @param {shaka.net.NetworkingEngine.RequestType} type
+   * @param {shaka.extern.RequestContext=} context
    */
-  static expectNoRequest(requestSpy, uri, type) {
-    expect(requestSpy).not.toHaveBeenCalledWith(
-        type, jasmine.objectContaining({uris: [uri]}));
+  static expectNoRequest(requestSpy, uri, type, context) {
+    // Jasmine "toHaveBeenCalledWith" doesn't handle optional parameters well.
+    if (context != undefined) {
+      expect(requestSpy).not.toHaveBeenCalledWith(
+          type, jasmine.objectContaining({uris: [uri]}),
+          jasmine.objectContaining({type: context.type}));
+    } else {
+      expect(requestSpy).not.toHaveBeenCalledWith(
+          type, jasmine.objectContaining({uris: [uri]}));
+    }
   }
 
   /**
@@ -314,8 +335,9 @@ shaka.test.FakeNetworkingEngine = class {
    * @param {string} uri
    * @param {number} startByte
    * @param {?number} endByte
+   * @param {boolean} isInit
    */
-  static expectRangeRequest(requestSpy, uri, startByte, endByte) {
+  static expectRangeRequest(requestSpy, uri, startByte, endByte, isInit) {
     const headers = {};
     if (startByte == 0 && endByte == null) {
       // No header required.
@@ -327,12 +349,17 @@ shaka.test.FakeNetworkingEngine = class {
       headers['Range'] = range;
     }
 
+    const type = isInit ?
+        shaka.net.NetworkingEngine.AdvancedRequestType.INIT_SEGMENT :
+        shaka.net.NetworkingEngine.AdvancedRequestType.MEDIA_SEGMENT;
+
     expect(requestSpy).toHaveBeenCalledWith(
         shaka.net.NetworkingEngine.RequestType.SEGMENT,
         jasmine.objectContaining({
           uris: [uri],
           headers: headers,
-        }));
+        }),
+        jasmine.objectContaining({type}));
   }
 };
 

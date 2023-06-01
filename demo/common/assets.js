@@ -141,6 +141,8 @@ shakaAssets.Feature = {
   DASH: shakaDemo.MessageIds.DASH,
   // Set if the asset is an HLS manifest.
   HLS: shakaDemo.MessageIds.HLS,
+  // Set if the asset is an MSS manifest.
+  MSS: shakaDemo.MessageIds.MSS,
 
   // Set if the asset has at least one image stream.
   THUMBNAILS: shakaDemo.MessageIds.THUMBNAILS,
@@ -540,7 +542,8 @@ shakaAssets.testAssets = [
       .addFeature(shakaAssets.Feature.MP4)
       .addFeature(shakaAssets.Feature.OFFLINE)
       .setIMAContentSourceId('2528370')
-      .setIMAVideoId('tears-of-steel'),
+      .setIMAVideoId('tears-of-steel')
+      .setIMAManifestType('HLS'),
   new ShakaDemoAssetInfo(
       /* name= */ 'Tears of Steel (live, DASH, Server Side ads)',
       /* iconUri= */ 'https://storage.googleapis.com/shaka-asset-icons/tears_of_steel.png',
@@ -550,7 +553,8 @@ shakaAssets.testAssets = [
       .addFeature(shakaAssets.Feature.MP4)
       .addFeature(shakaAssets.Feature.SUBTITLES)
       .addFeature(shakaAssets.Feature.LIVE)
-      .setIMAAssetKey('PSzZMzAkSXCmlJOWDmRj8Q'),
+      .setIMAAssetKey('PSzZMzAkSXCmlJOWDmRj8Q')
+      .setIMAManifestType('DASH'),
   new ShakaDemoAssetInfo(
       /* name= */ 'Tears of Steel (multicodec, surround + stereo)',
       /* iconUri= */ 'https://storage.googleapis.com/shaka-asset-icons/tears_of_steel.png',
@@ -901,6 +905,14 @@ shakaAssets.testAssets = [
       .addFeature(shakaAssets.Feature.MP4)
       .addFeature(shakaAssets.Feature.LIVE)
       .addFeature(shakaAssets.Feature.THUMBNAILS),
+  new ShakaDemoAssetInfo(
+      /* name= */ 'Microsoft Smooth Streaming',
+      /* iconUri= */ 'https://reference.dashif.org/dash.js/latest/samples/lib/img/mss-1.jpg',
+      /* manifestUri= */ 'https://playready.directtaps.net/smoothstreaming/SSWSS720H264/SuperSpeedway_720.ism/Manifest',
+      /* source= */ shakaAssets.Source.DASH_IF)
+      .addFeature(shakaAssets.Feature.MSS)
+      .addFeature(shakaAssets.Feature.HIGH_DEFINITION)
+      .addFeature(shakaAssets.Feature.MP4),
   // End DASH-IF Assets }}}
 
   // bitcodin assets {{{

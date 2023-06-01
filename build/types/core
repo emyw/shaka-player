@@ -38,8 +38,8 @@
 +../../lib/media/segment_reference.js
 +../../lib/media/stall_detector.js
 +../../lib/media/streaming_engine.js
++../../lib/media/segment_prefetch.js
 +../../lib/media/time_ranges_utils.js
-+../../lib/media/transmuxer.js
 +../../lib/media/video_wrapper.js
 +../../lib/media/webm_segment_index_parser.js
 
@@ -54,11 +54,17 @@
 +../../lib/routing/payload.js
 +../../lib/routing/walker.js
 
++../../lib/cea/dummy_cea_parser.js
++../../lib/cea/dummy_caption_decoder.js
+
 +../../lib/text/cue.js
 +../../lib/text/simple_text_displayer.js
 +../../lib/text/text_engine.js
++../../lib/text/text_utils.js
 +../../lib/text/ui_text_displayer.js
 +../../lib/text/web_vtt_generator.js
+
++../../lib/transmuxer/transmuxer_engine.js
 
 +../../lib/util/abortable_operation.js
 +../../lib/util/array_utils.js
@@ -72,6 +78,7 @@
 +../../lib/util/ebml_parser.js
 +../../lib/util/error.js
 +../../lib/util/event_manager.js
++../../lib/util/exp_golomb.js
 +../../lib/util/fairplay_utils.js
 +../../lib/util/fake_event.js
 +../../lib/util/fake_event_target.js
@@ -87,6 +94,7 @@
 +../../lib/util/media_ready_state_utils.js
 +../../lib/util/mime_utils.js
 +../../lib/util/mp4_box_parsers.js
++../../lib/util/mp4_generator.js
 +../../lib/util/mp4_parser.js
 +../../lib/util/multi_map.js
 +../../lib/util/networking.js
@@ -111,4 +119,4 @@
 +../../third_party/closure-uri/uri.js
 +../../third_party/closure-uri/utils.js
 
-+@cea
++@lcevc

@@ -78,6 +78,7 @@ player.getConfiguration();
        retryParameters: Object
        startAtSegmentBoundary: false
        safeSeekOffset: 5
+       segmentPrefetchLimit: 0
      textDisplayFactory: Function
 
 
@@ -143,8 +144,3 @@ player.configure({
 
 For more detail on individual configuration options, please see the API docs for
 {@link shaka.extern.PlayerConfiguration} and {@link shaka.Player#configure}.
-
-
-#### Continue the Tutorials
-
-Next, check out {@tutorial network-and-buffering-config}.

@@ -134,6 +134,8 @@ describe('Playhead', () => {
       minBufferTime: 10,
       offlineSessionIds: [],
       sequenceMode: false,
+      ignoreManifestTimestampsInSegmentsMode: false,
+      type: 'UNKNOWN',
     };
 
     config = shaka.util.PlayerConfiguration.createDefault().streaming;

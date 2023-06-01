@@ -29,7 +29,7 @@ You can build Shaka on Linux, Windows, or Mac.
 To get the sources and compile the library, you will need:
   * {@link https://git-scm.com/downloads Git v1.9+}
   * {@link https://www.python.org/downloads/ Python v2.7 or v3.5+}
-  * {@link https://java.com/en/download/ Java Runtime Environment v14+}
+  * {@link https://learn.microsoft.com/en-us/java/openjdk/download Java Runtime Environment v14+}
   * {@link https://nodejs.org/en/download/ NodeJS v14+}
   * A local web server, such as {@link https://httpd.apache.org/ Apache}
     * _NOTE: A local web server is required because browsers place restrictions
@@ -106,8 +106,3 @@ To subscribe to new releases on GitHub, you can follow
 To receive infrequent announcements and surveys from us, you can join our
 [mailing list](https://groups.google.com/forum/#!forum/shaka-player-users).
 The list is very low volume, and can only be written to by us.
-
-
-#### Continue the Tutorials
-
-Next, check out {@tutorial basic-usage}.
